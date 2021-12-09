@@ -7,6 +7,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class HelloApplication extends Application {
     @Override
@@ -15,6 +16,8 @@ public class HelloApplication extends Application {
         //ImageView
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("HomeScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1200, 600);
+        String css = Objects.requireNonNull(this.getClass().getResource("style.css")).toExternalForm();
+        scene.getStylesheets().add(css);
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();

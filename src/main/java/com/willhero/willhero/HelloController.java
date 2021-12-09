@@ -20,8 +20,7 @@ public class HelloController implements Initializable {
 //    @FXML private ImageView cloud5;
 //    @FXML private ImageView cloud6;
     @FXML private ImageView hero;
-    @FXML
-    protected void onHelloButtonClick() {
+    @FXML protected void onHelloButtonClick() {
         welcomeText.setText("Hello World!!...\n");
     }
 
