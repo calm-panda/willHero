@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.PauseScreen">
    <children>
       <ImageView fitHeight="550.0" fitWidth="400.0">
          <image>
@@ -18,9 +18,9 @@
             <Image url="@reset.png" />
          </image>
       </ImageView>
-      <Button layoutX="171.0" layoutY="119.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="165.0" styleClass="pauseButton" text="Restart">
+      <Button fx:id="restart" layoutX="171.0" layoutY="119.0" mnemonicParsing="false" onAction="#restartLvl" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="Restart">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Button>
       <ImageView fitHeight="78.0" fitWidth="78.0" layoutX="53.0" layoutY="236.0" preserveRatio="true">
@@ -28,9 +28,9 @@
             <Image url="@diskette.png" />
          </image>
       </ImageView>
-      <Button layoutX="171.0" layoutY="252.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="165.0" styleClass="pauseButton" text="Save Game">
+      <Button fx:id="saveGame" layoutX="171.0" layoutY="252.0" mnemonicParsing="false" onAction="#saveLvl" prefHeight="49.0" prefWidth="181.0" stylesheets="@../button.css" text="Save Game">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Button>
       <ImageView fitHeight="78.0" fitWidth="78.0" layoutX="60.0" layoutY="369.0">
@@ -38,9 +38,9 @@
             <Image url="@homepage.png" />
          </image>
       </ImageView>
-      <Button layoutX="171.0" layoutY="395.0" mnemonicParsing="false" prefHeight="47.0" prefWidth="165.0" styleClass="pauseButton" text="Home Screen">
+      <Button fx:id="homeScreen" layoutX="171.0" layoutY="395.0" mnemonicParsing="false" onAction="#homeScreenHandler" prefHeight="49.0" prefWidth="180.0" stylesheets="@../button.css" text="Home Screen">
          <font>
-            <Font size="20.0" />
+            <Font name="System Bold" size="20.0" />
          </font>
       </Button>
    </children>

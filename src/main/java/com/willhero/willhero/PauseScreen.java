@@ -1,14 +1,24 @@
 package com.willhero.willhero;
 
-import javafx.fxml.Initializable;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
-import java.net.URL;
-import java.util.ResourceBundle;
+public class PauseScreen {
+    @FXML private Button restart, saveGame, homeScreen;
 
-public class PauseScreen implements Initializable {
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    @FXML
+    protected void restartLvl(ActionEvent e) {
+        // code
+    }
+    @FXML
+    protected void saveLvl(ActionEvent e) {
+        // serializable code
+    }
+    @FXML
+    protected void homeScreenHandler(ActionEvent e) {
+        Stage pauseStage = (Stage) homeScreen.getScene().getWindow();
+        pauseStage.close();
     }
 }
