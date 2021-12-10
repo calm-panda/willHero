@@ -43,46 +43,40 @@ public class HelloController implements Initializable {
         clouds(cloud6,toX,pause[2]);
     }
 
+    private void jump(ImageView img, int transTime, int toY, int pause) {
+        TranslateTransition translate = new TranslateTransition();
+        translate.setNode(img);
+        translate.setDuration(Duration.millis(transTime));
+        translate.setCycleCount((TranslateTransition.INDEFINITE));
+        translate.setByY(toY);
+        translate.setAutoReverse(true);
+        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
+        seqTransition.play();
+    }
+
+    private void tntTrans(ImageView img) {
+        ScaleTransition scale = new ScaleTransition();
+        scale.setNode(tnt);
+        scale.setDuration(Duration.millis(900));
+        scale.setCycleCount(TranslateTransition.INDEFINITE);
+        scale.setByX(0.12);
+        scale.setByY(0.12);
+        scale.setAutoReverse(true);
+        scale.play();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        //clouds
         genCloud(-2200,new int[] {0,1000,3000});
-
-        TranslateTransition translate7 = new TranslateTransition();
-        translate7.setNode(hero);
-        translate7.setDuration(Duration.millis(450));
-        translate7.setCycleCount((TranslateTransition.INDEFINITE));
-        translate7.setByY(-130);
-        translate7.setAutoReverse(true);
-        translate7.play();
-        TranslateTransition translate8 = new TranslateTransition();
-        translate8.setNode(Orc1);
-        translate8.setDuration(Duration.millis(850));
-        translate8.setCycleCount((TranslateTransition.INDEFINITE));
-        translate8.setByY(-130);
-        translate8.setAutoReverse(true);
-        translate8.play();
-        TranslateTransition translate9 = new TranslateTransition();
-        translate9.setNode(RedOrc2);
-        translate9.setDuration(Duration.millis(800));
-        translate9.setCycleCount((TranslateTransition.INDEFINITE));
-        translate9.setByY(-130);
-        translate9.setAutoReverse(true);
-        translate9.play();
-        TranslateTransition translate10 = new TranslateTransition();
-        translate10.setNode(RedOrc1);
-        translate10.setDuration(Duration.millis(650));
-        translate10.setCycleCount((TranslateTransition.INDEFINITE));
-        translate10.setByY(-60);
-        translate10.setAutoReverse(true);
-        translate10.play();
-        ScaleTransition scale = new ScaleTransition();
-        scale.setNode(tnt);
-        scale.setDuration(Duration.millis(700));
-        scale.setCycleCount(TranslateTransition.INDEFINITE);
-        scale.setByX(0.2);
-        scale.setByY(0.2);
-        scale.setAutoReverse(true);
-        scale.play();
+        //hero
+        jump(hero,850,-130,0);
+        //orcs
+        int pause = 500;
+        jump(Orc1,1000,-130,pause);
+        jump(RedOrc1,950,-90,pause);
+        jump(RedOrc2,750,-60,pause);
+        //tnt
+        tntTrans(tnt);
     }
 }
