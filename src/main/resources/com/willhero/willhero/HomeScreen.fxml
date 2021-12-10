@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.HelloController">
+<AnchorPane fx:id="scenePane" minWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.HelloController">
    <children>
       <ImageView fitHeight="700.0" fitWidth="1200.0">
          <image>
@@ -166,7 +166,7 @@
             </Blend>
          </effect>
       </ImageView>
-      <ImageView cache="true" cacheHint="QUALITY" fitHeight="66.0" fitWidth="66.0" layoutX="1134.0" layoutY="6.0">
+      <ImageView fx:id="quit" cache="true" cacheHint="QUALITY" fitHeight="66.0" fitWidth="66.0" layoutX="1134.0" layoutY="6.0" onMouseClicked="#exitGame">
          <image>
             <Image url="@resign.png" />
          </image>

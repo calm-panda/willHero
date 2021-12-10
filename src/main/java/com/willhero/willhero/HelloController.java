@@ -4,25 +4,28 @@ import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
-    @FXML
-    private Label welcomeText;
     @FXML private ImageView cloud1, cloud2, cloud3, cloud4, cloud5, cloud6;
     @FXML private ImageView Orc1, RedOrc1, RedOrc2;
     @FXML private ImageView hero;
     @FXML private ImageView tnt;
-    @FXML protected void onHelloButtonClick() {
-        welcomeText.setText("Hello World!!...\n");
-    }
+    @FXML private ImageView quit;
+    @FXML private AnchorPane scenePane;
 
     private void clouds(ImageView cloud, int toX, int pause) {
         TranslateTransition translate = new TranslateTransition();
@@ -57,12 +60,25 @@ public class HelloController implements Initializable {
     private void tntTrans(ImageView img) {
         ScaleTransition scale = new ScaleTransition();
         scale.setNode(tnt);
-        scale.setDuration(Duration.millis(900));
+        scale.setDuration(Duration.millis(650));
         scale.setCycleCount(TranslateTransition.INDEFINITE);
         scale.setByX(0.12);
         scale.setByY(0.12);
         scale.setAutoReverse(true);
         scale.play();
+    }
+
+    @FXML
+    private void exitGame(MouseEvent e) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit");
+        alert.setContentText("Do you want to quit?");
+        alert.setHeaderText("You're exiting the Game!");
+
+        if (alert.showAndWait().get() == ButtonType.OK) {
+            Stage st = (Stage) scenePane.getScene().getWindow();
+            st.close();
+        }
     }
 
     @Override

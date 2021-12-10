@@ -7,11 +7,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.endCtrl">
+<AnchorPane fx:id="scenePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.endCtrl">
    <children>
       <ImageView fitHeight="700.0" fitWidth="1200.0">
          <image>
-            <Image url="@will_hero_sky.png" />
+            <Image url="@../will_hero_sky.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="250.0" fitWidth="250.0" layoutX="239.0" layoutY="117.0">
@@ -29,12 +29,12 @@
             <Font name="DejaVu Sans Bold" size="26.0" />
          </font>
       </Label>
-      <Button layoutX="364.0" layoutY="509.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="Exit">
+      <Button layoutX="364.0" layoutY="509.0" mnemonicParsing="false" onAction="#exit" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="Exit">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
-      <Button layoutX="702.0" layoutY="509.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="New Game">
+      <Button layoutX="702.0" layoutY="509.0" mnemonicParsing="false" onAction="#newGame" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="New Game">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
