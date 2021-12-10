@@ -1,6 +1,8 @@
 package com.willhero.willhero;
 
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,51 +24,30 @@ public class HelloController implements Initializable {
         welcomeText.setText("Hello World!!...\n");
     }
 
+    private void clouds(ImageView cloud, int toX, int pause) {
+        TranslateTransition translate = new TranslateTransition();
+        translate.setNode(cloud);
+        translate.setDuration((Duration.millis(10000)));
+        translate.setCycleCount((TranslateTransition.INDEFINITE));
+        translate.setToX(toX);
+        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
+        seqTransition.play();
+    }
+
+    private void genCloud(int toX, int[] pause) {
+        clouds(cloud1,toX,pause[0]);
+        clouds(cloud2,toX,pause[0]);
+        clouds(cloud3,toX,pause[1]);
+        clouds(cloud4,toX,pause[1]);
+        clouds(cloud5,toX,pause[2]);
+        clouds(cloud6,toX,pause[2]);
+    }
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //translate
-        TranslateTransition translate = new TranslateTransition();
-        translate.setNode(cloud1);
-        translate.setDuration((Duration.millis(900)));
-        translate.setCycleCount((TranslateTransition.INDEFINITE));
-        translate.setByX(-1000);
-       // translate.setAutoReverse(true);
-        translate.play();
-        TranslateTransition translate2 = new TranslateTransition();
-        translate2.setNode(cloud2);
-        translate2.setDuration((Duration.millis(1000)));
-        translate2.setCycleCount((TranslateTransition.INDEFINITE));
-        translate2.setByX(-1000);
-        //translate2.setAutoReverse(true);
-        translate2.play();
-        TranslateTransition translate3 = new TranslateTransition();
-        translate3.setNode(cloud3);
-        translate3.setDuration((Duration.millis(1200)));
-        translate3.setCycleCount((TranslateTransition.INDEFINITE));
-        translate3.setByX(-1000);
-        //translate3.setAutoReverse(true);
-        translate3.play();
-        TranslateTransition translate4 = new TranslateTransition();
-        translate4.setNode(cloud4);
-        translate4.setDuration((Duration.millis(1500)));
-        translate4.setCycleCount((TranslateTransition.INDEFINITE));
-        translate4.setByX(-1000);
-        //translate4.setAutoReverse(true);
-        translate4.play();
-        TranslateTransition translate5 = new TranslateTransition();
-        translate5.setNode(cloud5);
-        translate5.setDuration((Duration.millis(1300)));
-        translate5.setCycleCount((TranslateTransition.INDEFINITE));
-        translate5.setByX(-1000);
-        //translate5.setAutoReverse(true);
-        translate5.play();
-        TranslateTransition translate6 = new TranslateTransition();
-        translate6.setNode(cloud6);
-        translate6.setDuration((Duration.millis(1200)));
-        translate6.setCycleCount((TranslateTransition.INDEFINITE));
-        translate6.setByX(-1000);
-        //translate6.setAutoReverse(true);
-        translate6.play();
+        genCloud(-2200,new int[] {0,1000,3000});
+
         TranslateTransition translate7 = new TranslateTransition();
         translate7.setNode(hero);
         translate7.setDuration(Duration.millis(450));

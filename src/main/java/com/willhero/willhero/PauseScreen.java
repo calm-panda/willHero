@@ -1,4 +1,14 @@
 package com.willhero.willhero;
 
-public class PauseScreen {
+import javafx.fxml.Initializable;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class PauseScreen implements Initializable {
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
+    }
 }

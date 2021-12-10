@@ -12,20 +12,42 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.HelloController">
+<AnchorPane minWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.HelloController">
    <children>
       <ImageView fitHeight="700.0" fitWidth="1200.0">
          <image>
             <Image url="@will_hero_sky.png" />
          </image>
       </ImageView>
-      <ImageView cache="true" cacheHint="QUALITY" fitHeight="66.0" fitWidth="66.0" layoutX="1134.0" layoutY="6.0">
+      <ImageView fx:id="cloud3" fitHeight="78.0" fitWidth="145.0" layoutX="1567.0" layoutY="44.0" opacity="0.74">
          <image>
-            <Image url="@resign.png" />
+            <Image url="@cloud.png" />
          </image>
-         <effect>
-            <Reflection bottomOpacity="0.21" fraction="1.0" topOffset="2.0" topOpacity="1.0" />
-         </effect>
+      </ImageView>
+      <ImageView fx:id="cloud6" fitHeight="62.0" fitWidth="92.0" layoutX="2093.0" layoutY="96.0" opacity="0.85">
+         <image>
+            <Image url="@cloud.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cloud5" fitHeight="76.0" fitWidth="114.0" layoutX="1983.0" layoutY="84.0" opacity="0.85">
+         <image>
+            <Image url="@cloud.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cloud2" fitHeight="76.0" fitWidth="114.0" layoutX="1270.0" layoutY="120.0" opacity="0.85">
+         <image>
+            <Image url="@cloud.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cloud1" fitHeight="76.0" fitWidth="114.0" layoutX="1200.0" layoutY="123.0" opacity="0.85">
+         <image>
+            <Image url="@cloud.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="cloud4" fitHeight="70.0" fitWidth="110.0" layoutX="1679.0" layoutY="47.0" opacity="0.85">
+         <image>
+            <Image url="@cloud.png" />
+         </image>
       </ImageView>
       <ImageView fitHeight="96.0" fitWidth="92.0" layoutX="1021.0" layoutY="467.0">
          <image>
@@ -99,7 +121,7 @@
       </ImageView>
       <ImageView fx:id="Orc1" fitHeight="37.0" fitWidth="33.0" layoutX="493.0" layoutY="437.0">
          <image>
-            <Image url="@orc1.png" />
+            <Image url="@assets/Orc1.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="144.0" fitWidth="163.0" layoutX="507.0" layoutY="199.0" opacity="0.78">
@@ -123,39 +145,9 @@
             <Image url="@setting.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="cloud1" fitHeight="70.0" fitWidth="110.0" layoutX="693.0" layoutY="57.0" opacity="0.85">
-         <image>
-            <Image url="@cloud.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="cloud2" fitHeight="78.0" fitWidth="145.0" layoutX="581.0" layoutY="54.0" opacity="0.74">
-         <image>
-            <Image url="@cloud.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="cloud3" fitHeight="76.0" fitWidth="114.0" layoutX="214.0" layoutY="133.0" opacity="0.85">
-         <image>
-            <Image url="@cloud.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="cloud4" fitHeight="76.0" fitWidth="114.0" layoutX="284.0" layoutY="130.0" opacity="0.85">
-         <image>
-            <Image url="@cloud.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="cloud5" fitHeight="76.0" fitWidth="114.0" layoutX="997.0" layoutY="94.0" opacity="0.85">
-         <image>
-            <Image url="@cloud.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="cloud6" fitHeight="62.0" fitWidth="92.0" layoutX="1107.0" layoutY="106.0" opacity="0.85">
-         <image>
-            <Image url="@cloud.png" />
-         </image>
-      </ImageView>
       <ImageView fx:id="hero" fitHeight="40.0" fitWidth="40.0" layoutX="242.0" layoutY="431.0">
          <image>
-            <Image url="@hero.png" />
+            <Image url="@assets/Helmet3.png" />
          </image>
          <effect>
             <Blend mode="SCREEN">
@@ -174,7 +166,15 @@
             </Blend>
          </effect>
       </ImageView>
-      <Text disable="true" fill="#0a1b1e" layoutX="564.0" layoutY="365.0" scaleX="2.0" scaleY="2.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="New Game" textAlignment="CENTER">
+      <ImageView cache="true" cacheHint="QUALITY" fitHeight="66.0" fitWidth="66.0" layoutX="1134.0" layoutY="6.0">
+         <image>
+            <Image url="@resign.png" />
+         </image>
+         <effect>
+            <Reflection bottomOpacity="0.21" fraction="1.0" topOffset="2.0" topOpacity="1.0" />
+         </effect>
+      </ImageView>
+      <Text disable="true" fill="#0a1b1e" layoutX="556.0" layoutY="365.0" scaleX="2.0" scaleY="2.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="New Game" textAlignment="CENTER">
          <font>
             <Font name="Georgia" size="13.0" />
          </font>
