@@ -18,6 +18,10 @@ public class HelloApplication extends Application {
         String css = Objects.requireNonNull(this.getClass().getResource("style.css")).toExternalForm();
         scene.getStylesheets().add(css);
         stage.setTitle("WillHero");
+        stage.setOnCloseRequest(windowEvent -> {
+            windowEvent.consume();
+            new HelloController().exitFunc(stage);
+        });
         stage.setScene(scene);
         stage.show();
     }

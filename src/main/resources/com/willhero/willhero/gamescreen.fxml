@@ -218,7 +218,10 @@
             <Image url="@assets/WeaponShuriken.png" />
          </image>
       </ImageView>
-      <Label layoutX="576.0" layoutY="39.0" prefHeight="36.0" prefWidth="65.0" text="Score" textAlignment="CENTER" textFill="#12fff3" wrapText="true" />
+      <Label layoutX="567.0" layoutY="35.0" prefHeight="37.0" prefWidth="92.0" text="Score" textAlignment="CENTER" textFill="#12fff3" wrapText="true">
+         <font>
+            <Font size="30.0" />
+         </font></Label>
       <Label layoutX="1085.0" layoutY="8.0" text="00" textFill="#f7430c">
          <font>
             <Font size="31.0" />

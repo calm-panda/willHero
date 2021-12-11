@@ -2,6 +2,7 @@ package com.willhero.willhero;
 
 import javafx.animation.*;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -93,15 +94,18 @@ public class HelloController implements Initializable {
     }
 
     @FXML
-    private void exitGame(MouseEvent e) {
+    protected void exitGame(Event e) {
+        exitFunc((Stage) scenePane.getScene().getWindow());
+    }
+
+    protected void exitFunc(Stage stage) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit");
         alert.setContentText("Do you want to quit?");
         alert.setHeaderText("You're exiting the Game!");
 
         if (alert.showAndWait().get() == ButtonType.OK) {
-            Stage st = (Stage) scenePane.getScene().getWindow();
-            st.close();
+            stage.close();
         }
     }
 
