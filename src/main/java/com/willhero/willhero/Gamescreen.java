@@ -60,6 +60,7 @@ public class Gamescreen implements Initializable {
 
     private void play_audio(){
         AudioClip note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Udd_Gaye.mp3")).toString());
+        note.setVolume(0.5);
         note.play();
     }
 }

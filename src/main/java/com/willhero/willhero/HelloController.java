@@ -125,6 +125,7 @@ public class HelloController implements Initializable {
     private void play_audio(){
         note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Arcade.mp3")).toString());
         note.setCycleCount(AudioClip.INDEFINITE);
+        note.setVolume(0.09);
         note.play();
     }
 }
