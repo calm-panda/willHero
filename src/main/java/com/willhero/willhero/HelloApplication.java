@@ -11,7 +11,6 @@ import java.util.Objects;
 
 public class HelloApplication extends Application {
     @Override
-
     public void start(Stage stage) throws IOException {
         //ImageView
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("HomeScreen.fxml"));
