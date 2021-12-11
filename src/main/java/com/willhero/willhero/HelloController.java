@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -32,7 +33,7 @@ public class HelloController implements Initializable {
     @FXML private ImageView quit;
     @FXML private AnchorPane scenePane;
     @FXML private StackPane parentContainer;
-
+    private AudioClip note;
     private void clouds(ImageView cloud, int toX, int pause) {
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(cloud);
@@ -73,6 +74,7 @@ public class HelloController implements Initializable {
 
     @FXML
     private void gameScreen(MouseEvent e) throws IOException {
+        note.stop();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("gamescreen.fxml")));
         Scene scene = scenePane.getScene();
         sceneSwitch(root,parentContainer,scenePane);
@@ -108,6 +110,7 @@ public class HelloController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //clouds
+        play_audio();
         genCloud(-2200,new int[] {0,0,1000,1000,3000,3000}, new ImageView[] {cloud1,cloud2,cloud3,cloud4,cloud5,cloud6});
         //hero
         jump(hero,850,-130,0);
@@ -118,5 +121,10 @@ public class HelloController implements Initializable {
         jump(RedOrc2,850,-60,pause);
         //tnt
         tntTrans(tnt);
+    }
+    private void play_audio(){
+        note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Arcade.mp3")).toString());
+        note.setCycleCount(AudioClip.INDEFINITE);
+        note.play();
     }
 }
