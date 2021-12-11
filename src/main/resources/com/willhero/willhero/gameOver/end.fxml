@@ -9,7 +9,7 @@
 
 <AnchorPane fx:id="scenePane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.endCtrl">
    <children>
-      <ImageView fitHeight="700.0" fitWidth="1200.0">
+      <ImageView fitHeight="700.0" fitWidth="1210.0">
          <image>
             <Image url="@../will_hero_sky.png" />
          </image>
@@ -19,22 +19,27 @@
             <Image url="@game-over.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="340.0" fitWidth="438.0" layoutX="715.0" layoutY="81.0" preserveRatio="true">
+      <ImageView fitHeight="340.0" fitWidth="438.0" layoutX="708.0" layoutY="72.0" preserveRatio="true">
          <image>
             <Image url="@scorePanel.png" />
          </image>
       </ImageView>
-      <Label fx:id="score" layoutX="848.0" layoutY="260.0" textFill="WHITE">
+      <Label fx:id="score" layoutX="842.0" layoutY="251.0" text="9999" textFill="WHITE">
          <font>
             <Font name="DejaVu Sans Bold" size="26.0" />
          </font>
       </Label>
-      <Button layoutX="364.0" layoutY="509.0" mnemonicParsing="false" onAction="#exit" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="Exit">
+      <Button layoutX="273.0" layoutY="546.0" mnemonicParsing="false" onAction="#exit" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="Exit">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </Button>
-      <Button layoutX="702.0" layoutY="509.0" mnemonicParsing="false" onAction="#newGame" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="New Game">
+      <Button layoutX="757.0" layoutY="546.0" mnemonicParsing="false" onAction="#newGame" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="New Game">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+      </Button>
+      <Button layoutX="525.0" layoutY="434.0" mnemonicParsing="false" onAction="#exit" prefHeight="49.0" prefWidth="182.0" stylesheets="@../button.css" text="Main Menu">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>

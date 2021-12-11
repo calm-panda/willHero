@@ -198,7 +198,7 @@
             <Image url="@assets/OrcBoss.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="78.0" fitWidth="78.0" layoutX="10.0" layoutY="15.0">
+      <ImageView fx:id="pause" fitHeight="78.0" fitWidth="78.0" layoutX="10.0" layoutY="15.0" onMouseClicked="#pauseEvent">
          <image>
             <Image url="@assets/pause.png" />
          </image>

@@ -30,7 +30,7 @@ public class PauseScreen implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Stage stage = (Stage) scenePane.getScene().getWindow();
-        stage.setResizable(false);
+//        Stage stage = (Stage) scenePane.getScene().getWindow();
+//        stage.setResizable(false);
     }
 }

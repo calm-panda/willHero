@@ -75,26 +75,22 @@ public class HelloController implements Initializable {
     private void gameScreen(MouseEvent e) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("gamescreen.fxml")));
         Scene scene = scenePane.getScene();
-        //Set Y of second scene to Height of window
-        root.translateXProperty().set(scene.getWidth());
-        //Add second scene. Now both first and second scene is present
-        parentContainer.getChildren().add(root);
+        sceneSwitch(root,parentContainer,scenePane);
+    }
 
-        //Create new TimeLine animation
+    protected void sceneSwitch(Parent sceneDir,StackPane stackPane, AnchorPane scenePanePara) throws IOException {
+        sceneDir.translateXProperty().set(scenePanePara.getWidth());
+        stackPane.getChildren().add(sceneDir);
         Timeline timeline = new Timeline();
-        //Animate Y property
-        KeyValue kv = new KeyValue(root.translateXProperty(), 0, Interpolator.EASE_IN);
+        KeyValue kv = new KeyValue(sceneDir.translateXProperty(), 0, Interpolator.EASE_IN);
         KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
         timeline.getKeyFrames().add(kf);
-        //After completing animation, remove first scene
-        timeline.setOnFinished(t -> {
-            parentContainer.getChildren().remove(scenePane);
-        });
+        timeline.setOnFinished(t -> stackPane.getChildren().remove(scenePanePara));
         timeline.play();
     }
 
     @FXML
-    protected void exitGame(Event e) {
+    private void exitGame(Event e) {
         exitFunc((Stage) scenePane.getScene().getWindow());
     }
 
