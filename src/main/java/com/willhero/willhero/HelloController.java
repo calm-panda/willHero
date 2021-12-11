@@ -1,23 +1,26 @@
 package com.willhero.willhero;
 
-import javafx.animation.PauseTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class HelloController implements Initializable {
@@ -27,6 +30,7 @@ public class HelloController implements Initializable {
     @FXML private ImageView tnt;
     @FXML private ImageView quit;
     @FXML private AnchorPane scenePane;
+    @FXML private StackPane parentContainer;
 
     private void clouds(ImageView cloud, int toX, int pause) {
         TranslateTransition translate = new TranslateTransition();
@@ -38,16 +42,13 @@ public class HelloController implements Initializable {
         seqTransition.play();
     }
 
-    private void genCloud(int toX, int[] pause) {
-        clouds(cloud1,toX,pause[0]);
-        clouds(cloud2,toX,pause[0]);
-        clouds(cloud3,toX,pause[1]);
-        clouds(cloud4,toX,pause[1]);
-        clouds(cloud5,toX,pause[2]);
-        clouds(cloud6,toX,pause[2]);
+    protected void genCloud(int toX, int[] pause, ImageView[] clouds) {
+        for (int i = 0; i < pause.length; i++) {
+            clouds(clouds[i],toX,pause[i]);
+        }
     }
 
-    private void jump(ImageView img, int transTime, int toY, int pause) {
+    protected void jump(ImageView img, int transTime, int toY, int pause) {
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(img);
         translate.setDuration(Duration.millis(transTime));
@@ -58,7 +59,7 @@ public class HelloController implements Initializable {
         seqTransition.play();
     }
 
-    private void tntTrans(ImageView img) {
+    protected void tntTrans(ImageView img) {
         ScaleTransition scale = new ScaleTransition();
         scale.setNode(tnt);
         scale.setDuration(Duration.millis(650));
@@ -67,6 +68,28 @@ public class HelloController implements Initializable {
         scale.setByY(0.12);
         scale.setAutoReverse(true);
         scale.play();
+    }
+
+    @FXML
+    private void gameScreen(MouseEvent e) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("gamescreen.fxml")));
+        Scene scene = scenePane.getScene();
+        //Set Y of second scene to Height of window
+        root.translateXProperty().set(scene.getWidth());
+        //Add second scene. Now both first and second scene is present
+        parentContainer.getChildren().add(root);
+
+        //Create new TimeLine animation
+        Timeline timeline = new Timeline();
+        //Animate Y property
+        KeyValue kv = new KeyValue(root.translateXProperty(), 0, Interpolator.EASE_IN);
+        KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
+        timeline.getKeyFrames().add(kf);
+        //After completing animation, remove first scene
+        timeline.setOnFinished(t -> {
+            parentContainer.getChildren().remove(scenePane);
+        });
+        timeline.play();
     }
 
     @FXML
@@ -85,14 +108,14 @@ public class HelloController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //clouds
-        genCloud(-2200,new int[] {0,1000,3000});
+        genCloud(-2200,new int[] {0,0,1000,1000,3000,3000}, new ImageView[] {cloud1,cloud2,cloud3,cloud4,cloud5,cloud6});
         //hero
         jump(hero,850,-130,0);
         //orcs
         int pause = 500;
         jump(Orc1,1000,-130,pause);
         jump(RedOrc1,950,-90,pause);
-        jump(RedOrc2,750,-60,pause);
+        jump(RedOrc2,850,-60,pause);
         //tnt
         tntTrans(tnt);
     }
