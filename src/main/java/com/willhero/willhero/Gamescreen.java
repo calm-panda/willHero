@@ -2,15 +2,20 @@ package com.willhero.willhero;
 
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -22,9 +27,17 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Gamescreen implements Initializable {
+    /////////////
+    @FXML private Button restart, saveGame, homeScreen;
+//    @FXML private AnchorPane scenePane;
+    /////////////////////
     private MediaPlayer mediaPlayer;
     private MediaView media;
+    @FXML
+    private StackPane parentContainer;
     //private static final String Media_url = ""
+    @FXML
+    private AnchorPane scenePane;
     @FXML
     private ImageView cloud1,cloud2,cloud3,cloud4,cloud5,cloud6;
     @FXML
@@ -53,10 +66,13 @@ public class Gamescreen implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PauseScreen.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 400, 550);
         Stage newStage = new Stage();
+        newStage.initModality(Modality.WINDOW_MODAL);
+        newStage.initOwner(scenePane.getScene().getWindow());
         newStage.setTitle("Pause Menu");
         newStage.setScene(scene);
         newStage.show();
     }
+
 
     private void play_audio(){
         AudioClip note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Udd_Gaye.mp3")).toString());

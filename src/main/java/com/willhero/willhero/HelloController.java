@@ -76,7 +76,6 @@ public class HelloController implements Initializable {
     private void gameScreen(MouseEvent e) throws IOException {
         note.stop();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("gamescreen.fxml")));
-        Scene scene = scenePane.getScene();
         sceneSwitch(root,parentContainer,scenePane);
     }
 
