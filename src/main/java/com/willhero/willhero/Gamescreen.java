@@ -1,6 +1,8 @@
 package com.willhero.willhero;
 
+import javafx.animation.PauseTransition;
 import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,6 +33,7 @@ public class Gamescreen implements Initializable {
     @FXML private Button restart, saveGame, homeScreen;
 //    @FXML private AnchorPane scenePane;
     /////////////////////
+    @FXML private ImageView islands11, islands4_1, islands4_2, islands1, islands3, islands2, islands5;
     private MediaPlayer mediaPlayer;
     private MediaView media;
     @FXML
@@ -42,10 +45,12 @@ public class Gamescreen implements Initializable {
     private ImageView cloud1,cloud2,cloud3,cloud4,cloud5,cloud6;
     @FXML
     private ImageView OrcBoss, RedOrc1, tnt, hero, orc1, orc4, pause;
+    static HelloController homeCtrl = new HelloController();
+    private SequentialTransition heroTrans;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         play_audio();
-        HelloController homeCtrl = new HelloController();
         // orcs
         int pause = 0;
         homeCtrl.jump(OrcBoss,850,-60,pause);
@@ -53,7 +58,7 @@ public class Gamescreen implements Initializable {
         homeCtrl.jump(orc1,1000,-130,pause);
         homeCtrl.jump(orc4,900,-120,pause);
         // hero
-        homeCtrl.jump(hero,850,-130,pause);
+        heroTrans = homeCtrl.jump(hero,850,-130,pause);
         // tnt
         homeCtrl.tntTrans(tnt);
         // clouds
@@ -71,6 +76,26 @@ public class Gamescreen implements Initializable {
         newStage.setTitle("Pause Menu");
         newStage.setScene(scene);
         newStage.show();
+    }
+
+    @FXML
+    private void clickAnimationHandler(MouseEvent e) {
+        ImageView[] transImg = new ImageView[] {islands1,islands2,islands3,islands5,islands4_1,islands4_2,islands11,OrcBoss, RedOrc1, tnt, orc1, orc4};
+        for (ImageView img : transImg) {
+            transAnimation(img, 800, -120,false);
+        }
+        heroTrans.pause();
+        transAnimation(hero,200,80,true);
+        heroTrans.play();
+    }
+
+    protected void transAnimation(ImageView img, int duration,int byX, boolean rev) {
+        TranslateTransition translate = new TranslateTransition();
+        translate.setNode(img);
+        translate.setDuration(Duration.millis(duration));
+        translate.setByX(byX);
+        translate.setAutoReverse(rev);
+        translate.play();
     }
 
 

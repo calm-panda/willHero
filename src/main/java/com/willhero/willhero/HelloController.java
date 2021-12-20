@@ -50,7 +50,7 @@ public class HelloController implements Initializable {
         }
     }
 
-    protected void jump(ImageView img, int transTime, int toY, int pause) {
+    protected SequentialTransition jump(ImageView img, int transTime, int toY, int pause) {
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(img);
         translate.setDuration(Duration.millis(transTime));
@@ -59,6 +59,15 @@ public class HelloController implements Initializable {
         translate.setAutoReverse(true);
         SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
         seqTransition.play();
+        return seqTransition;
+    }
+
+    protected void toStop(TranslateTransition transition, boolean stop) {
+        if (stop) {
+            transition.stop();
+        } else {
+            transition.play();
+        }
     }
 
     protected void tntTrans(ImageView img) {
@@ -113,6 +122,7 @@ public class HelloController implements Initializable {
         genCloud(-2200,new int[] {0,0,1000,1000,3000,3000}, new ImageView[] {cloud1,cloud2,cloud3,cloud4,cloud5,cloud6});
         //hero
         jump(hero,850,-130,0);
+
         //orcs
         int pause = 500;
         jump(Orc1,1000,-130,pause);
