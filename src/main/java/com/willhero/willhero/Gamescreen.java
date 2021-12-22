@@ -1,5 +1,7 @@
 package com.willhero.willhero;
 
+import javafx.animation.Interpolator;
+import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
@@ -44,44 +46,54 @@ public class Gamescreen implements Initializable {
     @FXML
     private ImageView tnt, hero, orc1, orc4, pause;
     static HomeController homeCtrl = new HomeController();
-    private SequentialTransition heroTrans;
+//    private SequentialTransition heroTrans;  // stop hero in air
     private ArrayList<ImageView> allTrans = new ArrayList<>();
-    private int tapCounter;
+    TranslateTransition heroTran;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         play_audio();
         // orcs
-        int pause = 0;
+//        int pause = 0;
 //        scenePane.getChildren().add(assets.get("Trees")[1]);
-//        homeCtrl.jump(OrcBoss,850,-60,pause);
-//        homeCtrl.jump(RedOrc1,950,-90,pause);
-        homeCtrl.jump(orc1,1000,-130,pause);
-        homeCtrl.jump(orc4,900,-120,pause);
+//        jump();(OrcBoss,850,-60,pause);
+//        jump();(RedOrc1,950,-90,pause);
+        jump(orc1,1000,-130,true);
+        jump(orc4,900,-120,true);
         // hero
-        heroTrans = homeCtrl.jump(hero,850,-130,pause);
+        heroTran = jump(hero,850,-130,true);
         // tnt
         homeCtrl.tntTrans(tnt);
         // clouds
         homeCtrl.genCloud(-2200,new int[] {0,0,1000,1000,3000,3000}, new ImageView[] {cloud1,cloud2,cloud3,cloud4,cloud5,cloud6});
         allTrans.addAll(List.of(islands1, islands5, islands4_1, islands4_2, islands11, tnt, orc1, orc4, tree1,tree4,chestC));
         // adding imageView from controller
-        ImageView img1 = loadIsland(1350,477);
+        ImageView img1 = loadIsland(1350,477,false);
         allTrans.add(img1);
-//        ImageView img2 = loadIsland(500,477);
-//        ImageView img3 = loadIsland(750,477);
-        scenePane.getChildren().addAll(img1);
+        scenePane.getChildren().add(img1);
+        int prev = (int) (1350 + (img1.getFitWidth()/2) + ThreadLocalRandom.current().nextInt(15,100));
+        //////////////////////////////////// number of islands
+        for (int i = 0; i < 100; i++) {
+            ImageView img = loadIsland(prev,477,true);
+            prev += (int)(img.getFitWidth() / 2) + ThreadLocalRandom.current().nextInt(100,160);
+            scenePane.getChildren().add(img);
+            allTrans.add(img);
+        }
 
     }
 
-    private ImageView loadIsland(int x, int y) {
+    private ImageView loadIsland(int x, int y, boolean addPreDis) {
         int islandNum = ThreadLocalRandom.current().nextInt(0, assets.get("Islands").length);
         ImageView img = new ImageView(assets.get("Islands")[islandNum]);
         img.setFitHeight(ThreadLocalRandom.current().nextInt(50, 120));
-        img.setFitWidth(ThreadLocalRandom.current().nextInt(80, 220));
-        img.setX(x);
+        img.setFitWidth(ThreadLocalRandom.current().nextInt(100, 220));
+        if (addPreDis) {
+            img.setX(x+(img.getFitWidth()/2));
+        } else {
+            img.setX(x);
+        }
         img.setY(y);
-        transAnimation(img,800,1,-120,false);
+        transAnimation(img,800,1,-120,false,0);
         return img;
     }
 
@@ -99,20 +111,14 @@ public class Gamescreen implements Initializable {
 
     @FXML
     private void clickAnimationHandler(MouseEvent e) {
-        tapCounter++;
-        heroTrans.pause();
-        transAnimation(hero,200,2,120,true);
-        heroTrans.play();
-        if (tapCounter >= 2) {
-            tapCounter = 0;
-            ImageView img = loadIsland(1370,477);
-            scenePane.getChildren().add(img);
-            allTrans.add(img);
-        }
+        heroTran.pause();
+        psuedoForward(hero,60,1,80,false,0);
         for (ImageView img : allTrans) {
-            transAnimation(img, 600,1,-150,false);
-        }
-
+            transAnimation(img, 200,1,-120,false,100);
+        }// 283
+        psuedoForward(hero, 200,1,0,false,160);
+        heroTran.setDuration(Duration.millis(700));
+        heroTran.play();
     }
 
     private HashMap<String,Image[]> loadAssets() {
@@ -143,20 +149,45 @@ public class Gamescreen implements Initializable {
         return assets;
     }
 
-    private void transAnimation(ImageView img, int duration, int times, int byX, boolean rev) {
+    private void transAnimation(ImageView img, int duration, int times, int byX, boolean rev, int pause) {
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(img);
         translate.setDuration(Duration.millis(duration));
         translate.setCycleCount(times);
         translate.setByX(byX);
         translate.setAutoReverse(rev);
-        translate.play();
+        translate.setInterpolator(Interpolator.EASE_IN);
+        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
+        seqTransition.play();
     }
 
+    private void psuedoForward(ImageView img, int duration, int times, int toX, boolean rev, int pause) {
+        TranslateTransition translate = new TranslateTransition();
+        translate.setNode(img);
+        translate.setDuration(Duration.millis(duration));
+        translate.setCycleCount(times);
+        translate.setToX(toX);
+        translate.setAutoReverse(rev);
+        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
+        seqTransition.play();
+    }
+
+    private TranslateTransition jump(ImageView img, int duration, int byY, boolean isRev) {
+        TranslateTransition translate = new TranslateTransition();
+        translate.setNode(img);
+        translate.setDuration(Duration.millis(duration));
+        translate.setCycleCount((TranslateTransition.INDEFINITE));
+        translate.setByY(byY);
+        translate.setAutoReverse(isRev);
+//        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
+//        seqTransition.play();
+        translate.play();
+        return translate;
+    }
 
     private void play_audio(){
         AudioClip note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Udd_Gaye.mp3")).toString());
-        note.setVolume(0.5);
+        note.setVolume(0.2);
         note.play();
     }
 }

@@ -20,6 +20,7 @@ public class Home extends Application {
             windowEvent.consume();
             new HomeController().exitFunc(stage);
         });
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }
