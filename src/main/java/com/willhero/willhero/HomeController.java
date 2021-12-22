@@ -25,7 +25,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-public class HelloController implements Initializable {
+public class HomeController implements Initializable {
     @FXML private ImageView cloud1, cloud2, cloud3, cloud4, cloud5, cloud6;
     @FXML private ImageView Orc1, RedOrc1, RedOrc2;
     @FXML private ImageView hero;

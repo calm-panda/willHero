@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<StackPane fx:id="parentContainer" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.HelloController">
+<StackPane fx:id="parentContainer" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.HomeController">
    <children>
       <AnchorPane fx:id="scenePane" minWidth="-Infinity" prefHeight="650.0" prefWidth="1200.0">
          <children>
