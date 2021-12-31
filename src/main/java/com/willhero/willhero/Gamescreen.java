@@ -1,8 +1,6 @@
 package com.willhero.willhero;
 
-import javafx.animation.Interpolator;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
+import javafx.animation.AnimationTimer;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,6 +14,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -27,12 +27,13 @@ import javafx.scene.media.MediaView;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Gamescreen implements Initializable {
+public class Gamescreen implements Initializable,animate {
     /////////////
     @FXML private Button restart, saveGame, homeScreen;
+    @FXML private Rectangle hero;
 //    @FXML private AnchorPane scenePane;
     /////////////////////
-    @FXML private ImageView tree1, tree4, chestC;
+    @FXML private ImageView tree1, tree4, chest1;
     @FXML private ImageView islands11, islands4_1, islands4_2, islands1, islands5;
     private MediaPlayer mediaPlayer;
     private MediaView media;
@@ -44,11 +45,18 @@ public class Gamescreen implements Initializable {
     @FXML
     private ImageView cloud1,cloud2,cloud3,cloud4,cloud5,cloud6;
     @FXML
-    private ImageView tnt, hero, orc1, orc4, pause;
+    private ImageView tnt, orc1, orc4, pause;
     static HomeController homeCtrl = new HomeController();
 //    private SequentialTransition heroTrans;  // stop hero in air
-    private ArrayList<ImageView> allTrans = new ArrayList<>();
+    private HashMap<String, ArrayList<ImageView>> objects = new HashMap<>();
     TranslateTransition heroTran;
+
+    AnimationTimer collisionTimer = new AnimationTimer() {
+        @Override
+        public void handle(long l) {
+            collisionChk(orc4,hero);
+        }
+    };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -66,10 +74,20 @@ public class Gamescreen implements Initializable {
         homeCtrl.tntTrans(tnt);
         // clouds
         homeCtrl.genCloud(-2200,new int[] {0,0,1000,1000,3000,3000}, new ImageView[] {cloud1,cloud2,cloud3,cloud4,cloud5,cloud6});
-        allTrans.addAll(List.of(islands1, islands5, islands4_1, islands4_2, islands11, tnt, orc1, orc4, tree1,tree4,chestC));
+        objects.put("islands",new ArrayList<>());
+        objects.put("trees",new ArrayList<>());
+        objects.put("chests",new ArrayList<>());
+        objects.put("tnts",new ArrayList<>());
+        objects.put("orcs",new ArrayList<>());
+        objects.get("islands").addAll(List.of(islands1, islands5, islands4_1, islands4_2, islands11));
+        objects.get("trees").addAll(List.of(tree1,tree4));
+        objects.get("chests").add(chest1);
+        objects.get("tnts").add(tnt);
+        objects.get("orcs").addAll(List.of(orc1, orc4));
+        hero.setFill(new ImagePattern(new Image(String.valueOf(getClass().getResource("assets/Helmet4.png")))));
         // adding imageView from controller
         ImageView img1 = loadIsland(1350,477,false);
-        allTrans.add(img1);
+        objects.get("islands").add(img1);
         scenePane.getChildren().add(img1);
         int prev = (int) (1350 + (img1.getFitWidth()/2) + ThreadLocalRandom.current().nextInt(15,100));
         //////////////////////////////////// number of islands
@@ -77,8 +95,9 @@ public class Gamescreen implements Initializable {
             ImageView img = loadIsland(prev,477,true);
             prev += (int)(img.getFitWidth() / 2) + ThreadLocalRandom.current().nextInt(100,160);
             scenePane.getChildren().add(img);
-            allTrans.add(img);
+            objects.get("islands").add(img);
         }
+        collisionTimer.start();
 
     }
 
@@ -112,13 +131,20 @@ public class Gamescreen implements Initializable {
     @FXML
     private void clickAnimationHandler(MouseEvent e) {
         heroTran.pause();
-        psuedoForward(hero,60,1,80,false,0);
-        for (ImageView img : allTrans) {
-            transAnimation(img, 200,1,-120,false,100);
+        psuedoForward(hero,120,1,120,false,0);
+        for (String imgName : objects.keySet()) {
+            objects.get(imgName).forEach(img -> transAnimation(img, 200,1,-120,false,100));
         }// 283
-        psuedoForward(hero, 200,1,0,false,160);
+        psuedoForward(hero, 200,1,0,false,100);
         heroTran.setDuration(Duration.millis(700));
         heroTran.play();
+    }
+
+    public void collisionChk(ImageView a, Rectangle b) {
+        if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
+//            heroTran.stop();
+            System.out.println("Ho gaya collide gandu");
+        }
     }
 
     private HashMap<String,Image[]> loadAssets() {
@@ -147,42 +173,6 @@ public class Gamescreen implements Initializable {
             assets.get("Trees")[i] = new Image(String.valueOf(getClass().getResource("assets/Tree"+(i+1)+".png")));
         }
         return assets;
-    }
-
-    private void transAnimation(ImageView img, int duration, int times, int byX, boolean rev, int pause) {
-        TranslateTransition translate = new TranslateTransition();
-        translate.setNode(img);
-        translate.setDuration(Duration.millis(duration));
-        translate.setCycleCount(times);
-        translate.setByX(byX);
-        translate.setAutoReverse(rev);
-        translate.setInterpolator(Interpolator.EASE_IN);
-        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
-        seqTransition.play();
-    }
-
-    private void psuedoForward(ImageView img, int duration, int times, int toX, boolean rev, int pause) {
-        TranslateTransition translate = new TranslateTransition();
-        translate.setNode(img);
-        translate.setDuration(Duration.millis(duration));
-        translate.setCycleCount(times);
-        translate.setToX(toX);
-        translate.setAutoReverse(rev);
-        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
-        seqTransition.play();
-    }
-
-    private TranslateTransition jump(ImageView img, int duration, int byY, boolean isRev) {
-        TranslateTransition translate = new TranslateTransition();
-        translate.setNode(img);
-        translate.setDuration(Duration.millis(duration));
-        translate.setCycleCount((TranslateTransition.INDEFINITE));
-        translate.setByY(byY);
-        translate.setAutoReverse(isRev);
-//        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
-//        seqTransition.play();
-        translate.play();
-        return translate;
     }
 
     private void play_audio(){

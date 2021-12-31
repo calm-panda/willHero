@@ -5,6 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <StackPane fx:id="parentContainer" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.Gamescreen">
@@ -41,7 +42,7 @@
                   <Image url="@assets/Islands4.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="chestC" fitHeight="28.0" fitWidth="46.0" layoutX="889.0" layoutY="449.0">
+            <ImageView fx:id="chest1" fitHeight="28.0" fitWidth="46.0" layoutX="889.0" layoutY="449.0">
                <image>
                   <Image url="@assets/ChestClosed.png" />
                </image>
@@ -99,11 +100,6 @@
             <ImageView fx:id="islands11" fitHeight="81.0" fitWidth="244.0" layoutX="861.0" layoutY="477.0">
                <image>
                   <Image url="@assets/Islands11.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="hero" fitHeight="37.0" fitWidth="38.0" layoutX="282.0" layoutY="442.0" preserveRatio="true">
-               <image>
-                  <Image url="@assets/Helmet4.png" />
                </image>
             </ImageView>
             <ImageView fx:id="islands5" fitHeight="74.0" fitWidth="176.0" layoutX="526.0" layoutY="477.0">
@@ -171,6 +167,7 @@
                   <Image url="@assets/Islands2.png" />
                </image>
             </ImageView>
+            <Rectangle fx:id="hero" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="37.0" layoutX="282.0" layoutY="440.0" smooth="false" stroke="#00000033" strokeType="INSIDE" width="38.0" />
          </children>
       </AnchorPane>
    </children>
