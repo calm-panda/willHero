@@ -72,7 +72,7 @@ public class HomeController implements Initializable {
 
     protected void tntTrans(ImageView img) {
         ScaleTransition scale = new ScaleTransition();
-        scale.setNode(tnt);
+        scale.setNode(img);
         scale.setDuration(Duration.millis(650));
         scale.setCycleCount(TranslateTransition.INDEFINITE);
         scale.setByX(0.12);

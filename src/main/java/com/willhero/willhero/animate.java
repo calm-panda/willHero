@@ -21,6 +21,18 @@ public interface animate {
         seqTransition.play();
     }
 
+    public default void transAnimationByY(ImageView img, int duration, int times, int byY, boolean rev, int pause) {
+        TranslateTransition translate = new TranslateTransition();
+        translate.setNode(img);
+        translate.setDuration(Duration.millis(duration));
+        translate.setCycleCount(times);
+        translate.setByY(byY);
+        translate.setAutoReverse(rev);
+        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
+        seqTransition.setInterpolator(Interpolator.EASE_IN);
+        seqTransition.play();
+    }
+
     public default void psuedoForward(Rectangle img, int duration, int times, int toX, boolean rev, int pause) {
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(img);
@@ -33,14 +45,16 @@ public interface animate {
         seqTransition.play();
     }
 
-    public default void jump(ImageView img, int duration, int byY, boolean isRev) {
+    public default void jump(ImageView img, int duration, int byY, boolean isRev, int delay) {
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(img);
         translate.setDuration(Duration.millis(duration));
         translate.setCycleCount((TranslateTransition.INDEFINITE));
         translate.setByY(byY);
         translate.setAutoReverse(isRev);
-        translate.play();
+        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(delay)),translate);
+        seqTransition.setInterpolator(Interpolator.EASE_OUT);
+        seqTransition.play();
     }
 
     public default TranslateTransition jump(Rectangle img, int duration, int byY, boolean isRev) {

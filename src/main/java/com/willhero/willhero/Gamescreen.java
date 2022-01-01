@@ -51,23 +51,12 @@ public class Gamescreen implements Initializable,animate {
     private HashMap<String, ArrayList<ImageView>> objects = new HashMap<>();
     TranslateTransition heroTran;
 
-    AnimationTimer collisionTimer = new AnimationTimer() {
-        @Override
-        public void handle(long l) {
-            collisionChk(orc4,hero);
-        }
-    };
+    AnimationTimer collisionTimer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         play_audio();
-        // orcs
-//        int pause = 0;
-//        scenePane.getChildren().add(assets.get("Trees")[1]);
-//        jump();(OrcBoss,850,-60,pause);
-//        jump();(RedOrc1,950,-90,pause);
-        jump(orc1,1000,-130,true);
-        jump(orc4,900,-120,true);
+        int zIdx = 5;
         // hero
         heroTran = jump(hero,850,-130,true);
         // tnt
@@ -88,17 +77,116 @@ public class Gamescreen implements Initializable,animate {
         // adding imageView from controller
         ImageView img1 = loadIsland(1350,477,false);
         objects.get("islands").add(img1);
-        scenePane.getChildren().add(img1);
-        int prev = (int) (1350 + (img1.getFitWidth()/2) + ThreadLocalRandom.current().nextInt(15,100));
+        scenePane.getChildren().add(zIdx,img1);
+        int prev = (int) (850 + (img1.getFitWidth()/2) + ThreadLocalRandom.current().nextInt(-4,90));
         //////////////////////////////////// number of islands
         for (int i = 0; i < 100; i++) {
             ImageView img = loadIsland(prev,477,true);
-            prev += (int)(img.getFitWidth() / 2) + ThreadLocalRandom.current().nextInt(100,160);
+            // load trees at 60% chance
+            if(ThreadLocalRandom.current().nextInt(0,5) < 3) {
+                ImageView treeImg = loadTrees((int)img.getX());
+                scenePane.getChildren().add(2,treeImg);
+                objects.get("trees").add(treeImg);
+            }
+            // load orcs at 40% chance
+            if(ThreadLocalRandom.current().nextInt(0,5) < 2) {
+                ImageView orcImg = loadOrcs((int)img.getX());
+                scenePane.getChildren().add(zIdx,orcImg);
+                objects.get("orcs").add(orcImg);
+            }
+            // load chests at chance of 20 %
+            if(ThreadLocalRandom.current().nextInt(0,5) < 1 && img.getFitWidth() > 180) {
+                ImageView chestImg = loadChest((int) img.getX());
+                scenePane.getChildren().add(2,chestImg);
+                objects.get("chests").add(chestImg);
+            }
+            // load tnt at 40% chance
+            if(ThreadLocalRandom.current().nextInt(0,5) < 2 && img.getFitWidth() > 160) {
+                ImageView tntImg = loadTNT((int) img.getX());
+                scenePane.getChildren().add(2,tntImg);
+                objects.get("tnts").add(tntImg);
+            }
+            prev = (int)img.getX() + (int)(img.getFitWidth() / 2) + ThreadLocalRandom.current().nextInt(-4,90);
             scenePane.getChildren().add(img);
             objects.get("islands").add(img);
         }
-        collisionTimer.start();
+        // for all orcs jump transition
+        for (ImageView orcImg : objects.get("orcs")) {
+            jump(orcImg,1000,-120,true,ThreadLocalRandom.current().nextInt(500,1000));
+        }
 
+        for (ImageView tntImg : objects.get("tnts")) {
+            homeCtrl.tntTrans(tntImg);
+        }
+
+        collisionTimer = new AnimationTimer() {
+            @Override
+            public void handle(long l) {
+                for (ImageView orcImg : objects.get("orcs")) {
+                    orcCollisionChk(orcImg,hero);
+                }
+                for (ImageView chestImg : objects.get("chests")) {
+                    chestCollisionChk(chestImg,hero);
+                }
+                for (ImageView tntImg : objects.get("tnts")) {
+                    tntCollisionChk(tntImg,hero);
+                }
+            }
+        };
+        collisionTimer.start();
+    }
+
+    private ImageView loadTNT(int X) {
+        ImageView img = new ImageView(assets.get("Tnt")[0]);
+        img.setFitWidth(32);
+        img.setFitHeight(40);
+        img.setY(440);
+        img.setX(X+ThreadLocalRandom.current().nextInt(75,90));
+        return img;
+    }
+
+    private ImageView loadChest(int X) {
+        ImageView img = new ImageView(assets.get("Chests")[0]);
+        img.setFitWidth(46);
+        img.setFitHeight(28);
+        img.setY(449);
+        img.setX(X+ThreadLocalRandom.current().nextInt(105,140));
+        return img;
+    }
+
+    private ImageView loadOrcs(int X) {
+        int OrcNum = ThreadLocalRandom.current().nextInt(0, 2);
+        ImageView img;
+        if (OrcNum == 0) {
+            img = new ImageView(assets.get("Orcs")[0]);
+        } else {
+            img = new ImageView(assets.get("Orcs")[3]);
+        }
+        img.setPreserveRatio(true);
+        img.setX(X+ThreadLocalRandom.current().nextInt(30,60));
+        if(OrcNum == 0) {
+            img.setFitWidth(38);
+            img.setY(441);
+        } else {
+            img.setFitWidth(38);
+            img.setY(441);
+        }
+        return img;
+    }
+
+    private ImageView loadTrees(int X) {
+        int treeNum = ThreadLocalRandom.current().nextInt(0, assets.get("Trees").length);
+        ImageView img = new ImageView(assets.get("Trees")[treeNum]);
+        img.setPreserveRatio(true);
+        img.setX(X+ThreadLocalRandom.current().nextInt(0,40));
+        if(treeNum == 1) {
+            img.setFitWidth(31);
+            img.setY(408);
+        } else {
+            img.setFitWidth(43);
+            img.setY(419);
+        }
+        return img;
     }
 
     private ImageView loadIsland(int x, int y, boolean addPreDis) {
@@ -112,7 +200,6 @@ public class Gamescreen implements Initializable,animate {
             img.setX(x);
         }
         img.setY(y);
-        transAnimation(img,800,1,-120,false,0);
         return img;
     }
 
@@ -140,10 +227,26 @@ public class Gamescreen implements Initializable,animate {
         heroTran.play();
     }
 
-    public void collisionChk(ImageView a, Rectangle b) {
+    public void orcCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
-//            heroTran.stop();
-            System.out.println("Ho gaya collide gandu");
+            heroTran.pause();
+            psuedoForward(b,200,1,-60,false,0);
+            transAnimation(a, 200,1,80,false,0);
+            heroTran.play();
+        }
+    }
+    public void chestCollisionChk(ImageView a, Rectangle b) {
+        if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
+            a.setImage(assets.get("Chests")[1]);
+        }
+    }
+    public void tntCollisionChk(ImageView a, Rectangle b) {
+        if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
+            heroTran.pause();
+            psuedoForward(b,100,1,-1,false,0);
+            transAnimationByY(a,400,2,-80,true,0);
+            transAnimation(a, 800,1,100,false,0);
+            heroTran.play();
         }
     }
 
@@ -153,6 +256,9 @@ public class Gamescreen implements Initializable,animate {
         assets.put("Coin",new Image[] {new Image(String.valueOf(getClass().getResource("assets/Coin.png")))});
         assets.put("Islands",new Image[11]);
         assets.put("Orcs",new Image[6]);
+        assets.put("Tnt", new Image[] {new Image(String.valueOf(getClass().getResource("assets/TNT.png")))});
+        assets.put("Chests",new Image[] {new Image(String.valueOf(getClass().getResource("assets/ChestClosed.png"))),
+                                         new Image(String.valueOf(getClass().getResource("assets/ChestOpen.png")))});
 //        assets.put("RedOrcs",new ImageView[3]);
         assets.put("Trees",new Image[4]);
 //        assets.put("")    for weapons
