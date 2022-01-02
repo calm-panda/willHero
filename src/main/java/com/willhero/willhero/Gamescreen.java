@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -30,8 +31,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Gamescreen implements Initializable,animate {
     /////////////
     @FXML private Button restart, saveGame, homeScreen;
+    @FXML private Label coinLbl, scoreLbl;
     @FXML private Rectangle hero;
-//    @FXML private AnchorPane scenePane;
+    //    @FXML private AnchorPane scenePane;
     /////////////////////
     @FXML private ImageView tree1, tree4, chest1;
     @FXML private ImageView islands11, islands4_1, islands4_2, islands1, islands5;
@@ -47,7 +49,7 @@ public class Gamescreen implements Initializable,animate {
     @FXML
     private ImageView tnt, orc1, orc4, pause;
     static HomeController homeCtrl = new HomeController();
-//    private SequentialTransition heroTrans;  // stop hero in air
+    //    private SequentialTransition heroTrans;  // stop hero in air
     private HashMap<String, ArrayList<ImageView>> objects = new HashMap<>();
     TranslateTransition heroTran;
 
@@ -217,6 +219,9 @@ public class Gamescreen implements Initializable,animate {
 
     @FXML
     private void clickAnimationHandler(MouseEvent e) {
+        int score = Home.player.getScore();
+        score+=5;
+        Home.player.SetScore(score);
         heroTran.pause();
         psuedoForward(hero,120,1,120,false,0);
         for (String imgName : objects.keySet()) {
@@ -225,6 +230,7 @@ public class Gamescreen implements Initializable,animate {
         psuedoForward(hero, 200,1,0,false,100);
         heroTran.setDuration(Duration.millis(700));
         heroTran.play();
+        scoreLbl.setText(String.valueOf(Home.player.getScore()));
     }
 
     public void orcCollisionChk(ImageView a, Rectangle b) {
@@ -237,6 +243,10 @@ public class Gamescreen implements Initializable,animate {
     }
     public void chestCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
+            int coins = Home.player.getCoinsNum();
+            Home.player.setCoinsNum(coins + ThreadLocalRandom.current().nextInt(20,26));
+            coins = Home.player.getCoinsNum();
+            coinLbl.setText(String.valueOf(coins));
             a.setImage(assets.get("Chests")[1]);
         }
     }
@@ -258,7 +268,7 @@ public class Gamescreen implements Initializable,animate {
         assets.put("Orcs",new Image[6]);
         assets.put("Tnt", new Image[] {new Image(String.valueOf(getClass().getResource("assets/TNT.png")))});
         assets.put("Chests",new Image[] {new Image(String.valueOf(getClass().getResource("assets/ChestClosed.png"))),
-                                         new Image(String.valueOf(getClass().getResource("assets/ChestOpen.png")))});
+                new Image(String.valueOf(getClass().getResource("assets/ChestOpen.png")))});
 //        assets.put("RedOrcs",new ImageView[3]);
         assets.put("Trees",new Image[4]);
 //        assets.put("")    for weapons
@@ -280,10 +290,14 @@ public class Gamescreen implements Initializable,animate {
         }
         return assets;
     }
+    private void pause(){
+
+    }
 
     private void play_audio(){
         AudioClip note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Udd_Gaye.mp3")).toString());
-        note.setVolume(0.2);
+        note.setCycleCount(AudioClip.INDEFINITE);
+        note.setVolume(0.09);
         note.play();
     }
 }

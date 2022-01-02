@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 public class PauseScreen implements Initializable {
     @FXML private Button restart, saveGame, homeScreen;
     @FXML private AnchorPane scenePane;
-
+    private Serialise serialise;
     @FXML
     protected void restartLvl(ActionEvent e) {
         // code
@@ -31,7 +31,9 @@ public class PauseScreen implements Initializable {
     protected void homeScreenHandler(ActionEvent e) throws IOException {
         // code
     }
-
+    private void Savegame() throws IOException {
+        serialise.AddObj(Home.player, Home.player.getName());
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 //        Stage stage = (Stage) scenePane.getScene().getWindow();

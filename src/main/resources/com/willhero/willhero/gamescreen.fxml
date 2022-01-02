@@ -8,7 +8,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="parentContainer" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.Gamescreen">
+<StackPane fx:id="parentContainer" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.Gamescreen">
    <children>
       <AnchorPane fx:id="scenePane" minWidth="-Infinity" prefHeight="700.0" prefWidth="1200.0">
          <children>
@@ -152,12 +152,12 @@
                   <Image url="@assets/WeaponShuriken.png" />
                </image>
             </ImageView>
-            <Label layoutX="567.0" layoutY="35.0" prefHeight="37.0" prefWidth="92.0" text="Score" textAlignment="CENTER" textFill="#12fff3" wrapText="true">
+            <Label fx:id="scoreLbl" layoutX="567.0" layoutY="35.0" prefHeight="37.0" prefWidth="92.0" text="Score" textAlignment="CENTER" textFill="#12fff3" wrapText="true">
                <font>
-                  <Font size="30.0" />
+                  <Font size="36.0" />
                </font>
             </Label>
-            <Label layoutX="1085.0" layoutY="8.0" text="00" textFill="#f7430c">
+            <Label fx:id="coinLbl" layoutX="1074.0" layoutY="8.0" text="00" textFill="#f7430c">
                <font>
                   <Font size="31.0" />
                </font>

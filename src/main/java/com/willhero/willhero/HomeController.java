@@ -1,21 +1,19 @@
 package com.willhero.willhero;
 
 import javafx.animation.*;
-import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -33,7 +31,16 @@ public class HomeController implements Initializable {
     @FXML private ImageView quit;
     @FXML private AnchorPane scenePane;
     @FXML private StackPane parentContainer;
-    private AudioClip note;
+    public static Stage ComStage = new Stage();
+//    @FXML private Button OK;
+
+    public static AudioClip note;
+    private void loadSavedGames(){
+        for(int i= 0;i < Home.fileslist.length; i++){
+            String str = Home.fileslist[i].toString();
+            Home.filesArr.add(str);
+        }
+    }
     private void clouds(ImageView cloud, int toX, int pause) {
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(cloud);
@@ -80,20 +87,36 @@ public class HomeController implements Initializable {
         scale.setAutoReverse(true);
         scale.play();
     }
-
     @FXML
     private void gameScreen(MouseEvent e) throws IOException {
-        note.stop();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GameRecords.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 600, 600);
+        Stage newStage = new Stage();
+        HomeController.ComStage.initModality(Modality.WINDOW_MODAL);
+        HomeController.ComStage.initOwner(scenePane.getScene().getWindow());
+        HomeController.ComStage.setTitle("Player Data");
+        HomeController.ComStage.setScene(scene);
+        HomeController.ComStage.show();
+        HomeController.note.stop();
+
+    }
+    @FXML
+    private void OpenGameScreen(MouseEvent e) throws IOException {
+        HomeController.note.stop();
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("gamescreen.fxml")));
-        sceneSwitch(root,parentContainer,scenePane);
+        sceneSwitch(root,parentContainer,scenePane, 1200, 750);
     }
 
-    protected void sceneSwitch(Parent sceneDir,StackPane stackPane, AnchorPane scenePanePara) throws IOException {
+
+    protected void sceneSwitch(Parent sceneDir, StackPane stackPane, AnchorPane scenePanePara, int wid, int hei) throws IOException {
+        Stage StW = (Stage)scenePanePara.getScene().getWindow();
+        StW.setWidth(wid);
+        StW.setHeight(hei);
         sceneDir.translateXProperty().set(scenePanePara.getWidth());
         stackPane.getChildren().add(sceneDir);
         Timeline timeline = new Timeline();
-        KeyValue kv = new KeyValue(sceneDir.translateXProperty(), 0, Interpolator.EASE_IN);
-        KeyFrame kf = new KeyFrame(Duration.seconds(1), kv);
+        KeyValue kv = new KeyValue(sceneDir.translateXProperty(), 0, Interpolator.TANGENT(Duration.millis(500), 20, Duration.millis(500), 20));
+        KeyFrame kf = new KeyFrame(Duration.seconds(2), kv);
         timeline.getKeyFrames().add(kf);
         timeline.setOnFinished(t -> stackPane.getChildren().remove(scenePanePara));
         timeline.play();
@@ -118,7 +141,9 @@ public class HomeController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //clouds
+
         play_audio();
+        loadSavedGames();
         genCloud(-2200,new int[] {0,0,1000,1000,3000,3000}, new ImageView[] {cloud1,cloud2,cloud3,cloud4,cloud5,cloud6});
         //hero
         jump(hero,850,-130,0);
@@ -131,10 +156,11 @@ public class HomeController implements Initializable {
         //tnt
         tntTrans(tnt);
     }
+
     private void play_audio(){
-        note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Arcade.mp3")).toString());
-        note.setCycleCount(AudioClip.INDEFINITE);
-        note.setVolume(0.09);
-        note.play();
+        HomeController.note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Arcade.mp3")).toString());
+        HomeController.note.setCycleCount(AudioClip.INDEFINITE);
+        HomeController.note.setVolume(0.09);
+        HomeController.note.play();
     }
 }
