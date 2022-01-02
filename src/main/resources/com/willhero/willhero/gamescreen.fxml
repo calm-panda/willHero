@@ -168,6 +168,7 @@
                </image>
             </ImageView>
             <Rectangle fx:id="hero" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="37.0" layoutX="282.0" layoutY="440.0" smooth="false" stroke="#00000033" strokeType="INSIDE" width="38.0" />
+            <Rectangle fx:id="heroCross" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="37.0" layoutX="283.0" layoutY="461.0" opacity="0.0" smooth="false" stroke="#00000033" strokeType="INSIDE" width="38.0" />
          </children>
       </AnchorPane>
    </children>

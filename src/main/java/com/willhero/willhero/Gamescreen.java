@@ -5,6 +5,8 @@ import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Bounds;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -30,11 +32,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Gamescreen implements Initializable,animate {
     /////////////
-    @FXML private Button restart, saveGame, homeScreen;
-    @FXML private Label coinLbl, scoreLbl;
-    @FXML private Rectangle hero;
-    //    @FXML private AnchorPane scenePane;
+    @FXML private Rectangle hero, heroCross;
+//    @FXML private AnchorPane scenePane;
     /////////////////////
+    @FXML private Label scoreLbl;
     @FXML private ImageView tree1, tree4, chest1;
     @FXML private ImageView islands11, islands4_1, islands4_2, islands1, islands5;
     private MediaPlayer mediaPlayer;
@@ -165,14 +166,9 @@ public class Gamescreen implements Initializable,animate {
             img = new ImageView(assets.get("Orcs")[3]);
         }
         img.setPreserveRatio(true);
-        img.setX(X+ThreadLocalRandom.current().nextInt(30,60));
-        if(OrcNum == 0) {
-            img.setFitWidth(38);
-            img.setY(441);
-        } else {
-            img.setFitWidth(38);
-            img.setY(441);
-        }
+        img.setX(X+ThreadLocalRandom.current().nextInt(20,50));
+        img.setFitWidth(38);
+        img.setY(441);
         return img;
     }
 
@@ -204,18 +200,105 @@ public class Gamescreen implements Initializable,animate {
         img.setY(y);
         return img;
     }
-
+    static int answer = 0;
     @FXML
     private void pauseEvent(MouseEvent e) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("PauseScreen.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 400, 550);
-        Stage newStage = new Stage();
-        newStage.initModality(Modality.WINDOW_MODAL);
-        newStage.initOwner(scenePane.getScene().getWindow());
-        newStage.setTitle("Pause Menu");
-        newStage.setScene(scene);
-        newStage.show();
+        answer = display();
+        if (answer == 1) {
+            // restart
+            GameRecords.CommonStage.close();
+            FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("gamescreen.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 1200, 700);
+            //Stage GameRecords.CommonStage = new Stage();//(scene);
+            GameRecords.CommonStage.setResizable(false);
+            GameRecords.CommonStage.setScene(scene);
+            GameRecords.CommonStage.show();
+        } else if (answer == 2) {
+            // save game
+        } else if (answer == 3) {
+            // home screen
+            GameRecords.CommonStage.close();
+            FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("HomeScreen.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 1200, 700);
+            String css = Objects.requireNonNull(this.getClass().getResource("style.css")).toExternalForm();
+            scene.getStylesheets().add(css);
+            GameRecords.CommonStage.setTitle("WillHero");
+            GameRecords.CommonStage.setOnCloseRequest(windowEvent -> {
+                windowEvent.consume();
+                new HomeController().exitFunc(GameRecords.CommonStage);
+            });
+            GameRecords.CommonStage.setResizable(false);
+            GameRecords.CommonStage.setScene(scene);
+            GameRecords.CommonStage.show();
+        } else {
+            // no option choose
+        }
     }
+
+    private static void setButton(Button node, int layoutX, int layoutY, int fitWidth, int fitHeight) {
+        node.setLayoutX(layoutX);
+        node.setLayoutY(layoutY);
+        node.setPrefHeight(fitHeight);
+        node.setPrefWidth(fitWidth);
+    }
+    private static void setImage(ImageView node, int layoutX, int layoutY, int fitWidth, int fitHeight) {
+        node.setLayoutX(layoutX);
+        node.setLayoutY(layoutY);
+        node.setPreserveRatio(true);
+        node.setFitHeight(fitHeight);
+        node.setFitWidth(fitWidth);
+    }
+
+    public static int display() {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle("Pause Screen");
+        Button restart = new Button("Restart");
+        setButton(restart,171,119,182,49);
+        ImageView restImg = new ImageView(new Image(String.valueOf(Gamescreen.class.getResource("pause/reset.png"))));
+        setImage(restImg,53,104,78,81);
+        Button saveGame = new Button("Save Game");
+        setButton(saveGame,171,252,182,49);
+        ImageView saveImg = new ImageView(new Image(String.valueOf(Gamescreen.class.getResource("pause/diskette.png"))));
+        setImage(saveImg,53,236,78,78);
+        Button homeScreen = new Button("Home Screen");
+        setButton(homeScreen,171,395,182,49);
+        ImageView homeImg = new ImageView(new Image(String.valueOf(Gamescreen.class.getResource("pause/homepage.png"))));
+        setImage(homeImg,60,395,78,78);
+        // for background
+        ImageView backImg = new ImageView(new Image(String.valueOf(Gamescreen.class.getResource("pause/pause.png"))));
+        backImg.setFitHeight(550);
+        backImg.setFitWidth(400);
+
+        restart.setOnAction(e -> {
+                answer = 1;
+                stage.close();
+            }
+        );
+
+        saveGame.setOnAction(e -> {
+                answer= 2;
+                stage.close();
+            }
+        );
+        homeScreen.setOnAction(e -> {
+                answer= 3;
+                stage.close();
+            }
+        );
+
+        AnchorPane anchorPane = new AnchorPane();
+        anchorPane.getChildren().add(0,backImg);
+        anchorPane.getChildren().addAll(saveGame,saveImg,homeScreen,homeImg,restart,restImg);
+        Scene scene = new Scene(anchorPane, 400, 550);
+        scene.getStylesheets().add(String.valueOf(Gamescreen.class.getResource("button.css")));
+        stage.setScene(scene);
+        stage.setResizable(false);
+        stage.showAndWait();
+
+        return answer;
+    }
+
 
     @FXML
     private void clickAnimationHandler(MouseEvent e) {
@@ -233,7 +316,7 @@ public class Gamescreen implements Initializable,animate {
         scoreLbl.setText(String.valueOf(Home.player.getScore()));
     }
 
-    public void orcCollisionChk(ImageView a, Rectangle b) {
+    private void orcCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
             heroTran.pause();
             psuedoForward(b,200,1,-60,false,0);
@@ -241,22 +324,49 @@ public class Gamescreen implements Initializable,animate {
             heroTran.play();
         }
     }
-    public void chestCollisionChk(ImageView a, Rectangle b) {
+    private void chestCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
-            int coins = Home.player.getCoinsNum();
-            Home.player.setCoinsNum(coins + ThreadLocalRandom.current().nextInt(20,26));
-            coins = Home.player.getCoinsNum();
-            coinLbl.setText(String.valueOf(coins));
             a.setImage(assets.get("Chests")[1]);
         }
     }
-    public void tntCollisionChk(ImageView a, Rectangle b) {
+    private void tntCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
             heroTran.pause();
             psuedoForward(b,100,1,-1,false,0);
             transAnimationByY(a,400,2,-80,true,0);
             transAnimation(a, 800,1,100,false,0);
             heroTran.play();
+        }
+    }
+    private void fallChk(Rectangle b) {
+        boolean isAboveIsland = false;
+//        boolean isHeroLow = false;
+
+//        Bounds boundHero = b.localToScene(b.getBoundsInParent());
+        for (ImageView a : objects.get("islands")) {
+//            Bounds boundIsland = a.localToScreen(a.getBoundsInParent());
+            if (263 > a.getX() && 301 < a.getX()) {
+                System.out.println("max X is = " +a.getX() + ", island min x = "+ a.getX());
+                isAboveIsland = true;
+            }
+        }
+//        for (ImageView a : objects.get("islands")) {
+//            if (a.getBoundsInParent().intersects(heroCross.getBoundsInParent())) {
+//                isAboveIsland = true;
+//            }
+//        }
+//        if (b.getBoundsInParent().intersects(heroCross.getBoundsInParent())) {
+//            isHeroLow = true;
+//        }
+        if ((!isAboveIsland)) {
+            heroTran.stop();
+            TranslateTransition translate = new TranslateTransition();
+            translate.setNode(hero);
+            translate.setDuration(Duration.millis(700));
+            translate.setCycleCount(1);
+            translate.setByY(1000);
+            translate.setAutoReverse(false);
+            translate.play();
         }
     }
 
@@ -268,8 +378,7 @@ public class Gamescreen implements Initializable,animate {
         assets.put("Orcs",new Image[6]);
         assets.put("Tnt", new Image[] {new Image(String.valueOf(getClass().getResource("assets/TNT.png")))});
         assets.put("Chests",new Image[] {new Image(String.valueOf(getClass().getResource("assets/ChestClosed.png"))),
-                new Image(String.valueOf(getClass().getResource("assets/ChestOpen.png")))});
-//        assets.put("RedOrcs",new ImageView[3]);
+                                         new Image(String.valueOf(getClass().getResource("assets/ChestOpen.png")))});
         assets.put("Trees",new Image[4]);
 //        assets.put("")    for weapons
         for (int i = 0; i < 4; i++) {
@@ -282,9 +391,6 @@ public class Gamescreen implements Initializable,animate {
             assets.get("Orcs")[i] = new Image(String.valueOf(getClass().getResource("assets/Orc"+(i+1)+".png")));
         }
         assets.get("Orcs")[5] = new Image(String.valueOf(getClass().getResource("assets/OrcBoss.png")));
-//        for (int i = 0; i < 5; i++) {  // for red orcs
-//            assets.get("Orcs")[i] = new Image("assets/Orc"+(i+1)+".png");
-//        }
         for (int i = 0; i < 4; i++) {
             assets.get("Trees")[i] = new Image(String.valueOf(getClass().getResource("assets/Tree"+(i+1)+".png")));
         }

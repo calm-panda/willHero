@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class Home extends Application {
-    public static File folder = new File("C:\\Users\\jmd\\Desktop\\willHero\\src\\main\\resources\\com\\willhero\\willhero\\Saved Games");
+    public static File folder = new File("/home/panda/IdeaProjects/willHero/src/main/resources/com/willhero/willhero/Saved Games");
     public static File[] fileslist = folder.listFiles();
     public static ArrayList<String> filesArr = new ArrayList<>();
 
