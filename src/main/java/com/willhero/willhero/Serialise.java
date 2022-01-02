@@ -2,32 +2,31 @@ package com.willhero.willhero;
 import java.io.*;
 
 public class Serialise {
-    ObjectOutputStream out = null;
+
     public void AddObj(Player obj, String filename) throws IOException {
+        //out = null;
+
         try {
-            out = new ObjectOutputStream(new FileOutputStream("/Saved Games/"+filename+".txt"));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("C:\\Users\\jmd\\Desktop\\willHero\\src\\main\\resources\\com\\willhero\\willhero\\Saved Games\\" + filename + ".txt"));
             out.writeObject(obj);
-        }catch(IOException e) {
-            e.printStackTrace();
-        }finally {
             out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
-    public void GetData(String filename) throws IOException {
+
+    public Player GetData(String filename) throws IOException {
         Player obj = null;
-        ObjectInputStream in = null;
         try {
-            in = new ObjectInputStream(new FileInputStream("/Saved Games/"+filename+".txt"));
-            obj = (Player)in.readObject();
-        }catch(ClassNotFoundException e) {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("C:\\Users\\jmd\\Desktop\\willHero\\src\\main\\resources\\com\\willhero\\willhero\\Saved Games\\" + filename + ".txt"));
+            obj = (Player) in.readObject();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
-        }catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("User Doesn't Exist Try New Game!!!!!\n");
         }
-        finally {
-            in.close();
-        }
-        if(obj !=  null)
-            System.out.println("Name: "+obj.PlayerName+", Score: "+obj.Score+", Time: "+obj.date);
+        if (obj != null)
+            return obj;
+        return obj;
     }
 }

@@ -37,7 +37,7 @@ public class HomeController implements Initializable {
     public static AudioClip note;
     private void loadSavedGames(){
         for(int i= 0;i < Home.fileslist.length; i++){
-            String str = Home.fileslist[i].toString();
+            String str = Home.fileslist[i].toString().substring(83);
             Home.filesArr.add(str);
         }
     }
@@ -88,12 +88,25 @@ public class HomeController implements Initializable {
         scale.play();
     }
     @FXML
-    private void gameScreen(MouseEvent e) throws IOException {
+    private void SaveMenu(MouseEvent e) throws IOException, InterruptedException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SavedGames.fxml"));
+        Scene scene = new Scene(fxmlLoader.load(), 600, 600);
+        Stage newStage = new Stage();
+//        HomeController.ComStage.initModality(Modality.WINDOW_MODAL);
+//        HomeController.ComStage.initOwner(scenePane.getScene().getWindow());
+        HomeController.ComStage.setTitle("Player Data");
+        HomeController.ComStage.setScene(scene);
+        HomeController.ComStage.show();
+        HomeController.note.stop();
+
+    }
+    @FXML
+    private void gameScreen(MouseEvent e) throws IOException{
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GameRecords.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 600);
         Stage newStage = new Stage();
-        HomeController.ComStage.initModality(Modality.WINDOW_MODAL);
-        HomeController.ComStage.initOwner(scenePane.getScene().getWindow());
+//        HomeController.ComStage.initModality(Modality.WINDOW_MODAL);
+//        HomeController.ComStage.initOwner(scenePane.getScene().getWindow());
         HomeController.ComStage.setTitle("Player Data");
         HomeController.ComStage.setScene(scene);
         HomeController.ComStage.show();

@@ -34,8 +34,9 @@ public class Gamescreen implements Initializable,animate {
     /////////////
     @FXML private Rectangle hero, heroCross;
 //    @FXML private AnchorPane scenePane;
+    public static Serialise serialise = new Serialise();
     /////////////////////
-    @FXML private Label scoreLbl;
+    @FXML private Label scoreLbl, coinLbl;
     @FXML private ImageView tree1, tree4, chest1;
     @FXML private ImageView islands11, islands4_1, islands4_2, islands1, islands5;
     private MediaPlayer mediaPlayer;
@@ -53,7 +54,7 @@ public class Gamescreen implements Initializable,animate {
     //    private SequentialTransition heroTrans;  // stop hero in air
     private HashMap<String, ArrayList<ImageView>> objects = new HashMap<>();
     TranslateTransition heroTran;
-
+    public static AudioClip note;
     AnimationTimer collisionTimer;
 
     @Override
@@ -71,6 +72,7 @@ public class Gamescreen implements Initializable,animate {
         objects.put("chests",new ArrayList<>());
         objects.put("tnts",new ArrayList<>());
         objects.put("orcs",new ArrayList<>());
+        objects.put("openChests",new ArrayList<>());
         objects.get("islands").addAll(List.of(islands1, islands5, islands4_1, islands4_2, islands11));
         objects.get("trees").addAll(List.of(tree1,tree4));
         objects.get("chests").add(chest1);
@@ -125,14 +127,21 @@ public class Gamescreen implements Initializable,animate {
         collisionTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
+                boolean isOpen = false;
+                int img = -1;
                 for (ImageView orcImg : objects.get("orcs")) {
                     orcCollisionChk(orcImg,hero);
                 }
                 for (ImageView chestImg : objects.get("chests")) {
-                    chestCollisionChk(chestImg,hero);
+                    isOpen = chestCollisionChk(chestImg,hero);
+                    img = objects.get("chests").indexOf(chestImg);
                 }
                 for (ImageView tntImg : objects.get("tnts")) {
                     tntCollisionChk(tntImg,hero);
+                }
+                if (isOpen) {
+                    objects.get("openChests").add(objects.get("chests").get(img));
+                    objects.get("chests").remove(img);
                 }
             }
         };
@@ -206,6 +215,7 @@ public class Gamescreen implements Initializable,animate {
         answer = display();
         if (answer == 1) {
             // restart
+            Gamescreen.note.stop();
             GameRecords.CommonStage.close();
             FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("gamescreen.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1200, 700);
@@ -214,9 +224,13 @@ public class Gamescreen implements Initializable,animate {
             GameRecords.CommonStage.setScene(scene);
             GameRecords.CommonStage.show();
         } else if (answer == 2) {
-            // save game
+            //save game
+            if(!Home.filesArr.contains(Home.player.getName()))
+                Gamescreen.serialise.AddObj(Home.player, Home.player.getName());
+            random();
         } else if (answer == 3) {
             // home screen
+            Gamescreen.note.stop();
             GameRecords.CommonStage.close();
             FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("HomeScreen.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1200, 700);
@@ -324,10 +338,16 @@ public class Gamescreen implements Initializable,animate {
             heroTran.play();
         }
     }
-    private void chestCollisionChk(ImageView a, Rectangle b) {
+    private boolean chestCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
+            int coins = Home.player.getCoinsNum();
+            Home.player.setCoinsNum(coins + ThreadLocalRandom.current().nextInt(1,3));
+            coins = Home.player.getCoinsNum();
+            coinLbl.setText(String.valueOf(coins));
             a.setImage(assets.get("Chests")[1]);
+            return true;
         }
+        return false;
     }
     private void tntCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
@@ -350,14 +370,7 @@ public class Gamescreen implements Initializable,animate {
                 isAboveIsland = true;
             }
         }
-//        for (ImageView a : objects.get("islands")) {
-//            if (a.getBoundsInParent().intersects(heroCross.getBoundsInParent())) {
-//                isAboveIsland = true;
-//            }
-//        }
-//        if (b.getBoundsInParent().intersects(heroCross.getBoundsInParent())) {
-//            isHeroLow = true;
-//        }
+
         if ((!isAboveIsland)) {
             heroTran.stop();
             TranslateTransition translate = new TranslateTransition();
@@ -396,14 +409,16 @@ public class Gamescreen implements Initializable,animate {
         }
         return assets;
     }
-    private void pause(){
-
+    private void random() throws IOException {
+        Player temp = new Player();
+        temp = Gamescreen.serialise.GetData("Pratham");
+        System.out.println(temp.date);
     }
 
     private void play_audio(){
-        AudioClip note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Udd_Gaye.mp3")).toString());
-        note.setCycleCount(AudioClip.INDEFINITE);
-        note.setVolume(0.09);
-        note.play();
+        Gamescreen.note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Udd_Gaye.mp3")).toString());
+        Gamescreen.note.setCycleCount(AudioClip.INDEFINITE);
+        Gamescreen.note.setVolume(0.09);
+        Gamescreen.note.play();
     }
 }

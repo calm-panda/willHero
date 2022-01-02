@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.willhero.willhero.GameRecords">
+    <children>
+        <ImageView fitHeight="600.0" fitWidth="600.0" layoutY="-2.0">
+            <image>
+                <Image url="@assets/arcadegames.png" />
+            </image>
+        </ImageView>
+        <Text cache="true" fill="#061e39" layoutX="240.0" layoutY="75.84599876403809" scaleX="3.0" scaleY="6.0" smooth="false" strokeLineCap="BUTT" strokeLineJoin="BEVEL" strokeMiterLimit="14.0" strokeType="INSIDE" strokeWidth="0.0" text="Search User" textAlignment="CENTER" wrappingWidth="141.3147735595703" AnchorPane.bottomAnchor="519.8900012969971">
+            <font>
+                <Font name="Ink Free" size="13.0" />
+            </font>
+            <effect>
+                <Blend mode="GREEN">
+                    <topInput>
+                        <Shadow blurType="GAUSSIAN" color="#b2c3b6" height="6.07" radius="1.0175" width="0.0" />
+                    </topInput>
+                </Blend>
+            </effect>
+        </Text>
+        <Button fx:id="OK2" layoutX="242.0" layoutY="442.0" mnemonicParsing="false" onMouseClicked="#Searching" prefHeight="61.0" prefWidth="104.0" stylesheets="@button.css" text="OK" textAlignment="CENTER" wrapText="true" />
+        <TextField fx:id="SearchField" layoutX="137.0" layoutY="176.0" prefHeight="98.0" prefWidth="334.0" promptText="Enter Name" style="-fx-font-size: 16; -fx-alignment: center; -fx-background-color: Sky Blue;">
+            <effect>
+                <Glow>
+                    <input>
+                        <DropShadow blurType="GAUSSIAN" height="0.0" radius="0.0" width="0.0" />
+                    </input>
+                </Glow>
+            </effect>
+        </TextField>
+      <Label fx:id="Reply" contentDisplay="CENTER" layoutX="174.0" layoutY="323.0" prefHeight="84.0" prefWidth="229.0" style="-fx-alignment: center;" textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font name="Ink Free" size="33.0" />
+         </font>
+         <effect>
+            <Blend>
+               <topInput>
+                  <Shadow />
+               </topInput>
+            </Blend>
+         </effect>
+      </Label>
+    </children>
+</AnchorPane>
