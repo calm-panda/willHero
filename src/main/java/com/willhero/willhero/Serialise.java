@@ -7,7 +7,7 @@ public class Serialise {
         //out = null;
 
         try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("C:\\Users\\jmd\\Desktop\\willHero\\src\\main\\resources\\com\\willhero\\willhero\\Saved Games\\" + filename + ".txt"));
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("/home/panda/IdeaProjects/willHero/src/main/resources/com/willhero/willhero/Saved Games/" + filename + ".txt"));
             out.writeObject(obj);
             out.close();
         } catch (IOException e) {
@@ -18,7 +18,7 @@ public class Serialise {
     public Player GetData(String filename) throws IOException {
         Player obj = null;
         try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream("C:\\Users\\jmd\\Desktop\\willHero\\src\\main\\resources\\com\\willhero\\willhero\\Saved Games\\" + filename + ".txt"));
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream("/home/panda/IdeaProjects/willHero/src/main/resources/com/willhero/willhero/Saved Games/" + filename + ".txt"));
             obj = (Player) in.readObject();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();

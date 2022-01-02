@@ -37,7 +37,7 @@ public class HomeController implements Initializable {
     public static AudioClip note;
     private void loadSavedGames(){
         for(int i= 0;i < Home.fileslist.length; i++){
-            String str = Home.fileslist[i].toString().substring(83);
+            String str = Home.fileslist[i].toString().substring(87);
             Home.filesArr.add(str);
         }
     }

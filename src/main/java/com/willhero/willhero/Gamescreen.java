@@ -8,6 +8,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,7 +35,9 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Gamescreen implements Initializable,animate {
     /////////////
     @FXML private Rectangle hero, heroCross;
-//    @FXML private AnchorPane scenePane;
+    public static Player user = new Player();
+
+    //    @FXML private AnchorPane scenePane;
     public static Serialise serialise = new Serialise();
     /////////////////////
     @FXML private Label scoreLbl, coinLbl;
@@ -69,6 +72,7 @@ public class Gamescreen implements Initializable,animate {
         // clouds
         homeCtrl.genCloud(-2200,new int[] {0,0,1000,1000,3000,3000}, new ImageView[] {cloud1,cloud2,cloud3,cloud4,cloud5,cloud6});
         objects.put("islands",new ArrayList<>());
+        objects.put("bossOrc",new ArrayList<>());
         objects.put("trees",new ArrayList<>());
         objects.put("chests",new ArrayList<>());
         objects.put("tnts",new ArrayList<>());
@@ -85,8 +89,11 @@ public class Gamescreen implements Initializable,animate {
         objects.get("islands").add(img1);
         scenePane.getChildren().add(zIdx,img1);
         int prev = (int) (850 + (img1.getFitWidth()/2) + ThreadLocalRandom.current().nextInt(-4,90));
+        int count = 100 - (Gamescreen.user.Score / 5);
+        scoreLbl.setText(String.valueOf(Gamescreen.user.getScore()));
+        coinLbl.setText(String.valueOf(Gamescreen.user.getCoinsNum()));
         //////////////////////////////////// number of islands
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < count; i++) {
             ImageView img = loadIsland(prev,477,true);
             // load trees at 60% chance
             if(ThreadLocalRandom.current().nextInt(0,5) < 3) {
@@ -116,6 +123,22 @@ public class Gamescreen implements Initializable,animate {
             scenePane.getChildren().add(img);
             objects.get("islands").add(img);
         }
+        // load boss
+        ImageView img = new ImageView(assets.get("Islands")[1]);
+        img.setFitHeight(80);
+        img.setFitWidth(250);
+        img.setX(prev+(img.getFitWidth()/2));
+        img.setY(447);
+        scenePane.getChildren().add(img);
+        objects.get("islands").add(img);
+        ImageView bossOrc = new ImageView(assets.get("Orcs")[5]);
+        bossOrc.setPreserveRatio(true);
+        bossOrc.setFitWidth(80);
+        bossOrc.setX(prev+(img.getFitWidth()/2)+50);
+        bossOrc.setY(396);
+        scenePane.getChildren().add(bossOrc);
+        objects.get("orcs").add(bossOrc);
+
         // for all orcs jump transition
         for (ImageView orcImg : objects.get("orcs")) {
             jump(orcImg,1000,-120,true,ThreadLocalRandom.current().nextInt(500,1000));
@@ -144,7 +167,11 @@ public class Gamescreen implements Initializable,animate {
                     objects.get("openChests").add(objects.get("chests").get(img));
                     objects.get("chests").remove(img);
                 }
-                heroFallChk(hero);
+                try {
+                    heroFallChk(hero);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 for (ImageView orc : objects.get("orcs")) {
                     orcFallChk(orc);
                 }
@@ -416,7 +443,7 @@ public class Gamescreen implements Initializable,animate {
         }
     }
 
-    private void heroFallChk(Rectangle b) {
+    private void heroFallChk(Rectangle b) throws IOException {
         boolean isAboveIsland = false;
         boolean isHeroLow = false;
 
@@ -439,6 +466,10 @@ public class Gamescreen implements Initializable,animate {
             translate.setByY(1000);
             translate.setAutoReverse(false);
             translate.play();
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("gameOver/end.fxml")));
+            collisionTimer.stop();
+            Gamescreen.note.stop();
+            homeCtrl.sceneSwitch(root,parentContainer,scenePane,1200,700);
         }
     }
 

@@ -26,6 +26,11 @@ public class Player implements Serializable {
         this.date = date.toString();
     }
     void setCurrentState(Gamescreen obj)  {  currentState = obj;   }
+
+    public void setScore(int score) {
+        Score = score;
+    }
+
     int getScore(){
         return Score;
     }

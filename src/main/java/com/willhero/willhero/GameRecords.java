@@ -26,10 +26,10 @@ public class GameRecords {
     public static Stage CommonStage = new Stage();
     private void AddUser(){
         String Name = NameField.getText();
-
         Home.player.setPlayerName(Name);
         Home.player.setCoinsNum(0);
         Home.player.SetScore(0);
+        Gamescreen.user = Home.player;
     }
     @FXML
     private void OpenGameScreen(MouseEvent e) throws IOException {
@@ -50,12 +50,14 @@ public class GameRecords {
     @FXML//Ankit.txt
     private void Searching() throws InterruptedException {
         String name = SearchField.getText();
+        String str = name;
         System.out.println(Home.filesArr);
         name = name + ".txt";
         if(Home.filesArr.contains(name)){
             OK2.setOnAction(event -> {
                 try {
                     Reply.setText("found a game");
+                    Gamescreen.user = Gamescreen.serialise.GetData(str);
                     OpenGameScreenFromSavedGames();
                 } catch (IOException e) {
                     e.printStackTrace();
