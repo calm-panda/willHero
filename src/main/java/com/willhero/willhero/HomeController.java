@@ -92,8 +92,6 @@ public class HomeController implements Initializable {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("GameRecords.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 600);
         Stage newStage = new Stage();
-        HomeController.ComStage.initModality(Modality.WINDOW_MODAL);
-        HomeController.ComStage.initOwner(scenePane.getScene().getWindow());
         HomeController.ComStage.setTitle("Player Data");
         HomeController.ComStage.setScene(scene);
         HomeController.ComStage.show();

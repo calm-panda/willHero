@@ -1,6 +1,7 @@
 package com.willhero.willhero;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.FadeTransition;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -71,6 +72,7 @@ public class Gamescreen implements Initializable,animate {
         objects.put("chests",new ArrayList<>());
         objects.put("tnts",new ArrayList<>());
         objects.put("orcs",new ArrayList<>());
+        objects.put("openChests",new ArrayList<>());
         objects.get("islands").addAll(List.of(islands1, islands5, islands4_1, islands4_2, islands11));
         objects.get("trees").addAll(List.of(tree1,tree4));
         objects.get("chests").add(chest1);
@@ -125,14 +127,25 @@ public class Gamescreen implements Initializable,animate {
         collisionTimer = new AnimationTimer() {
             @Override
             public void handle(long l) {
+                boolean isOpen = false;
+                int img = -1;
                 for (ImageView orcImg : objects.get("orcs")) {
                     orcCollisionChk(orcImg,hero);
                 }
                 for (ImageView chestImg : objects.get("chests")) {
-                    chestCollisionChk(chestImg,hero);
+                    isOpen = chestCollisionChk(chestImg,hero);
+                    img = objects.get("chests").indexOf(chestImg);
                 }
                 for (ImageView tntImg : objects.get("tnts")) {
                     tntCollisionChk(tntImg,hero);
+                }
+                if (isOpen) {
+                    objects.get("openChests").add(objects.get("chests").get(img));
+                    objects.get("chests").remove(img);
+                }
+                heroFallChk(hero);
+                for (ImageView orc : objects.get("orcs")) {
+                    orcFallChk(orc);
                 }
             }
         };
@@ -293,7 +306,7 @@ public class Gamescreen implements Initializable,animate {
         Scene scene = new Scene(anchorPane, 400, 550);
         scene.getStylesheets().add(String.valueOf(Gamescreen.class.getResource("button.css")));
         stage.setScene(scene);
-        stage.setResizable(false);
+        stage.setResizable(true);
         stage.showAndWait();
 
         return answer;
@@ -318,51 +331,127 @@ public class Gamescreen implements Initializable,animate {
 
     private void orcCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
+            // below the orc
+            if ((a.getBoundsInParent().getCenterY() + (a.getFitHeight()/2)) == (b.getBoundsInParent().getCenterY() - 19)) {
+                heroTran.stop();
+                TranslateTransition translate = new TranslateTransition();
+                translate.setNode(hero);
+                translate.setDuration(Duration.millis(700));
+                translate.setCycleCount(1);
+                translate.setByY(1000);
+                translate.setAutoReverse(false);
+                translate.play();
+            }
             heroTran.pause();
             psuedoForward(b,200,1,-60,false,0);
             transAnimation(a, 200,1,80,false,0);
             heroTran.play();
         }
     }
-    private void chestCollisionChk(ImageView a, Rectangle b) {
+    private boolean chestCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
             a.setImage(assets.get("Chests")[1]);
+            return true;
         }
+        return false;
     }
     private void tntCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
+            ImageView boomImg = new ImageView(new Image(String.valueOf(getClass().getResource("boom.png"))));
+            boomImg.setPreserveRatio(true);
+            boomImg.setFitWidth(80);
+            boomImg.setX(a.getBoundsInParent().getCenterX()+55);
+            boomImg.setY(a.getBoundsInParent().getCenterY()-45);
+            scenePane.getChildren().add(boomImg);
+            FadeTransition ft = fade(boomImg,0.0,1.0,1,1000,false);
             heroTran.pause();
             psuedoForward(b,100,1,-1,false,0);
-            transAnimationByY(a,400,2,-80,true,0);
+            transAnimationToY(a,400,2,-80,true,0);
             transAnimation(a, 800,1,100,false,0);
             heroTran.play();
+            ft.setOnFinished(event -> {
+//                killInRange(boomImg.getBoundsInParent().getCenterX(),boomImg.getBoundsInParent().getCenterY(),50);
+                scenePane.getChildren().remove(a);
+                scenePane.getChildren().remove(boomImg);
+                objects.get("tnts").remove(a);
+            });
         }
     }
-    private void fallChk(Rectangle b) {
-        boolean isAboveIsland = false;
-//        boolean isHeroLow = false;
 
-//        Bounds boundHero = b.localToScene(b.getBoundsInParent());
-        for (ImageView a : objects.get("islands")) {
-//            Bounds boundIsland = a.localToScreen(a.getBoundsInParent());
-            if (263 > a.getX() && 301 < a.getX()) {
-                System.out.println("max X is = " +a.getX() + ", island min x = "+ a.getX());
-                isAboveIsland = true;
-            }
-        }
-//        for (ImageView a : objects.get("islands")) {
-//            if (a.getBoundsInParent().intersects(heroCross.getBoundsInParent())) {
-//                isAboveIsland = true;
-//            }
-//        }
-//        if (b.getBoundsInParent().intersects(heroCross.getBoundsInParent())) {
-//            isHeroLow = true;
-//        }
-        if ((!isAboveIsland)) {
+    private void killInRange(double x, double y, int range) {
+        System.out.println(hero.getBoundsInParent().getCenterX()+", range = "+(x-range));
+        if ((hero.getBoundsInParent().getCenterX() > x - range || hero.getBoundsInParent().getCenterX() < x + range)
+                && (hero.getBoundsInParent().getCenterY() < y - range || hero.getBoundsInParent().getCenterY() > y + range)) {
             heroTran.stop();
             TranslateTransition translate = new TranslateTransition();
             translate.setNode(hero);
             translate.setDuration(Duration.millis(700));
+            translate.setCycleCount(1);
+            translate.setByY(1000);
+            translate.setAutoReverse(false);
+            translate.play();
+        }
+        for (ImageView orcImg : objects.get("orcs")) {
+            if ((orcImg.getBoundsInParent().getCenterX() > x - range || orcImg.getBoundsInParent().getCenterX() < x + range)
+                    && (orcImg.getBoundsInParent().getCenterY() < y - range || orcImg.getBoundsInParent().getCenterY() > y + range)) {
+                TranslateTransition translate = new TranslateTransition();
+                translate.setNode(orcImg);
+                translate.setDuration(Duration.millis(700));
+                translate.setCycleCount(1);
+                translate.setByY(1000);
+                translate.setAutoReverse(false);
+                translate.play();
+                scenePane.getChildren().remove(orcImg);
+            }
+        }
+    }
+
+    private void heroFallChk(Rectangle b) {
+        boolean isAboveIsland = false;
+        boolean isHeroLow = false;
+
+        Bounds boundHero = b.getBoundsInParent();
+        for (ImageView a : objects.get("islands")) {
+            Bounds boundIsland = a.getBoundsInParent();
+            if (boundHero.getCenterX() > (boundIsland.getCenterX() - (a.getFitWidth()/2)) && boundHero.getCenterX() < (boundIsland.getCenterX() + (a.getFitWidth()/2))) {
+                isAboveIsland = true;
+            }
+        }
+        if (boundHero.getCenterY() >= 458) {
+            isHeroLow = true;
+        }
+        if ((!isAboveIsland) && isHeroLow) {
+            heroTran.stop();
+            TranslateTransition translate = new TranslateTransition();
+            translate.setNode(hero);
+            translate.setDuration(Duration.millis(700));
+            translate.setCycleCount(1);
+            translate.setByY(1000);
+            translate.setAutoReverse(false);
+            translate.play();
+        }
+    }
+
+    private void orcFallChk(ImageView b) {
+        boolean isAboveIsland = false;
+        boolean isOrcLow = false;
+
+        Bounds boundOrc = b.getBoundsInParent();
+        for (ImageView a : objects.get("islands")) {
+            Bounds boundIsland = a.getBoundsInParent();
+            if (boundOrc.getCenterX() > (boundIsland.getCenterX() - (a.getFitWidth()/2)) && boundOrc.getCenterX() < (boundIsland.getCenterX() + (a.getFitWidth()/2))) {
+//                System.out.println("Hello");
+                isAboveIsland = true;
+            }
+        }
+        if (boundOrc.getCenterY() >= 458) {
+//            System.out.println(boundOrc.getCenterY());
+            isOrcLow = true;
+        }
+        if ((!isAboveIsland) && isOrcLow) {
+            TranslateTransition translate = new TranslateTransition();
+            translate.setNode(b);
+            translate.setDuration(Duration.millis(500));
             translate.setCycleCount(1);
             translate.setByY(1000);
             translate.setAutoReverse(false);

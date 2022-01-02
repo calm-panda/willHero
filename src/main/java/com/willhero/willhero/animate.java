@@ -1,9 +1,6 @@
 package com.willhero.willhero;
 
-import javafx.animation.Interpolator;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
@@ -21,12 +18,12 @@ public interface animate {
         seqTransition.play();
     }
 
-    public default void transAnimationByY(ImageView img, int duration, int times, int byY, boolean rev, int pause) {
+    public default void transAnimationToY(ImageView img, int duration, int times, int toY, boolean rev, int pause) {
         TranslateTransition translate = new TranslateTransition();
         translate.setNode(img);
         translate.setDuration(Duration.millis(duration));
         translate.setCycleCount(times);
-        translate.setByY(byY);
+        translate.setToY(toY);
         translate.setAutoReverse(rev);
         SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(pause)),translate);
         seqTransition.setInterpolator(Interpolator.EASE_IN);
@@ -66,5 +63,16 @@ public interface animate {
         translate.setAutoReverse(isRev);
         translate.play();
         return translate;
+    }
+
+    public default FadeTransition fade(ImageView img, double fadeFrom, double fadeTo, int cycle, int delay, boolean rev) {
+        FadeTransition ft = new FadeTransition(Duration.millis(400), img);
+        ft.setFromValue(fadeFrom);
+        ft.setToValue(fadeTo);
+        ft.setCycleCount(cycle);
+        ft.setAutoReverse(rev);
+        SequentialTransition seqTransition = new SequentialTransition (new PauseTransition(Duration.millis(delay)),ft);
+        seqTransition.play();
+        return ft;
     }
 }
