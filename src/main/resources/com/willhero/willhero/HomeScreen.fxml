@@ -135,7 +135,7 @@
                   <InnerShadow height="67.5" offsetX="7.0" radius="26.2975" width="39.69" />
                </effect>
             </ImageView>
-            <ImageView fitHeight="66.0" fitWidth="66.0" layoutX="729.0" layoutY="233.0" opacity="0.8" smooth="false">
+            <ImageView fitHeight="66.0" fitWidth="66.0" layoutX="729.0" layoutY="233.0" onMouseClicked="#SaveMenu" opacity="0.8" smooth="false">
                <image>
                   <Image url="@diskette.png" />
                </image>

@@ -35,8 +35,9 @@ public class Gamescreen implements Initializable,animate {
     /////////////
     @FXML private Rectangle hero, heroCross;
 //    @FXML private AnchorPane scenePane;
+    public static Serialise serialise = new Serialise();
     /////////////////////
-    @FXML private Label scoreLbl;
+    @FXML private Label scoreLbl, coinLbl;
     @FXML private ImageView tree1, tree4, chest1;
     @FXML private ImageView islands11, islands4_1, islands4_2, islands1, islands5;
     private MediaPlayer mediaPlayer;
@@ -54,7 +55,7 @@ public class Gamescreen implements Initializable,animate {
     //    private SequentialTransition heroTrans;  // stop hero in air
     private HashMap<String, ArrayList<ImageView>> objects = new HashMap<>();
     TranslateTransition heroTran;
-
+    public static AudioClip note;
     AnimationTimer collisionTimer;
 
     @Override
@@ -219,6 +220,7 @@ public class Gamescreen implements Initializable,animate {
         answer = display();
         if (answer == 1) {
             // restart
+            Gamescreen.note.stop();
             GameRecords.CommonStage.close();
             FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("gamescreen.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1200, 700);
@@ -227,9 +229,13 @@ public class Gamescreen implements Initializable,animate {
             GameRecords.CommonStage.setScene(scene);
             GameRecords.CommonStage.show();
         } else if (answer == 2) {
-            // save game
+            //save game
+            if(!Home.filesArr.contains(Home.player.getName()))
+                Gamescreen.serialise.AddObj(Home.player, Home.player.getName());
+            random();
         } else if (answer == 3) {
             // home screen
+            Gamescreen.note.stop();
             GameRecords.CommonStage.close();
             FXMLLoader fxmlLoader = new FXMLLoader(Home.class.getResource("HomeScreen.fxml"));
             Scene scene = new Scene(fxmlLoader.load(), 1200, 700);
@@ -306,7 +312,7 @@ public class Gamescreen implements Initializable,animate {
         Scene scene = new Scene(anchorPane, 400, 550);
         scene.getStylesheets().add(String.valueOf(Gamescreen.class.getResource("button.css")));
         stage.setScene(scene);
-        stage.setResizable(true);
+        stage.setResizable(false);
         stage.showAndWait();
 
         return answer;
@@ -350,6 +356,10 @@ public class Gamescreen implements Initializable,animate {
     }
     private boolean chestCollisionChk(ImageView a, Rectangle b) {
         if (a.getBoundsInParent().intersects(b.getBoundsInParent())) {
+            int coins = Home.player.getCoinsNum();
+            Home.player.setCoinsNum(coins + ThreadLocalRandom.current().nextInt(1,3));
+            coins = Home.player.getCoinsNum();
+            coinLbl.setText(String.valueOf(coins));
             a.setImage(assets.get("Chests")[1]);
             return true;
         }
@@ -485,14 +495,16 @@ public class Gamescreen implements Initializable,animate {
         }
         return assets;
     }
-    private void pause(){
-
+    private void random() throws IOException {
+        Player temp = new Player();
+        temp = Gamescreen.serialise.GetData("Pratham");
+        System.out.println(temp.date);
     }
 
     private void play_audio(){
-        AudioClip note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Udd_Gaye.mp3")).toString());
-        note.setCycleCount(AudioClip.INDEFINITE);
-        note.setVolume(0.09);
-        note.play();
+        Gamescreen.note = new AudioClip(Objects.requireNonNull(this.getClass().getResource("Udd_Gaye.mp3")).toString());
+        Gamescreen.note.setCycleCount(AudioClip.INDEFINITE);
+        Gamescreen.note.setVolume(0.09);
+        Gamescreen.note.play();
     }
 }

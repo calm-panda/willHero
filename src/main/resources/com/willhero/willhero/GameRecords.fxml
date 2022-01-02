@@ -32,7 +32,7 @@
          </effect>
       </Text>
       <Button fx:id="OK" layoutX="242.0" layoutY="442.0" mnemonicParsing="false" onMouseClicked="#OpenGameScreen" prefHeight="61.0" prefWidth="104.0" stylesheets="@button.css" text="OK" textAlignment="CENTER" wrapText="true" />
-      <TextField fx:id="NameField" layoutX="137.0" layoutY="176.0" prefHeight="98.0" prefWidth="334.0" promptText="Enter Name">
+      <TextField fx:id="NameField" layoutX="137.0" layoutY="176.0" prefHeight="98.0" prefWidth="334.0" promptText="Enter Name" style="-fx-font-size: 16; -fx-alignment: center; -fx-background-color: Sky Blue;">
          <effect>
             <Glow>
                <input>
