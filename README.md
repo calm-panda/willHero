@@ -1,4 +1,7 @@
 ## Project to test whether we can implement the game using UI library such as (JavaFX).
+### UML:
+![alt text](UML.png)
+
 ### This was just a fun project for testing.
 ### Please note that some features were implemented from scratch, such as:
 - AABB collision detection
